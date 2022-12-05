@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  rsyslog:
+    logging:
+      options:
+        max-size: "1000m"
+        max-file: "2"
+    image: rsyslog-sekoia:1.0
+    environment:
+      - MEMORY_MESSAGES=100000
+      - DISK_SPACE=32g
+    ports:
+      - "20516-20518:20516-20518"
+    volumes:
+      - ./integrations.csv:/integrations.csv
+      - ./conf:/etc/rsyslog.d
+      - ./rsyslog:/var/spool/rsyslog
