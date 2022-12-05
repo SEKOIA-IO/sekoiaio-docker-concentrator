@@ -15,12 +15,6 @@ To be able to run the container you need :
 * INBOUND TCP flows between your systems/applications and this host on the ports of your choice
 * OUTBOUND TCP flow to intake.sekoia.io on port 10514
 
-## Build the image
-To build the image :
-```bash
-docker build . -t rsyslog-sekoia:1.0
-```
-
 ## intakes.yaml file
 The `intakes.yaml` file is used to tell Rsyslog what ports and intake keys to use.
 In the `intakes` key, specify:
@@ -116,3 +110,13 @@ To delete the container (container needs to be stopped):
 ```bash
 sudo docker compose rm
 ```
+
+## OPTIONAL: Build the image
+If you don't want to use the image available at `ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest` - **NOT RECOMMENDED** -, you can also build the image on your own.
+
+To build the image:
+```bash
+docker build . -t sekoiaio-docker-concentrator:latest
+```
+
+**Note**: Be sure to adapt the `docker-compose.yml` accordingly and change `image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest` by `image: sekoiaio-docker-concentrator:latest` if you use this method.

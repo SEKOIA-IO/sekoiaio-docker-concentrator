@@ -5,7 +5,7 @@ services:
       options:
         max-size: "1000m"
         max-file: "2"
-    image: rsyslog-sekoia:1.0
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest
     environment:
       - MEMORY_MESSAGES=100000
       - DISK_SPACE=32g
