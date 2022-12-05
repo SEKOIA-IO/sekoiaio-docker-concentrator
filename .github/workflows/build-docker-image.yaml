@@ -26,7 +26,7 @@ jobs:
 
     - name: Push to GitHub Packages
       uses: docker/build-push-action@v3
-      push: true
       with:
+        push: true
         tags: |
           ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest
