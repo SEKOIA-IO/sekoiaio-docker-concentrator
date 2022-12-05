@@ -26,15 +26,15 @@ In the `intakes` key, specify:
 ```yaml
 ---
 intakes:
-- name: windows
+- name: Techno1
   port: 20516
-  intake_key: INTAKE_KEY_FOR_WINDOWS
-- name: harfanglab
+  intake_key: INTAKE_KEY_FOR_TECHNO_1
+- name: Techno2
   port: 20517
-  intake_key: INTAKE_KEY_FOR_HARFANGLAB
-- name: fortigate
+  intake_key: INTAKE_KEY_FOR_TECHNO_2
+- name: Techno3
   port: 20518
-  intake_key: INTAKE_KEY_FOR_FORTIGATE
+  intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
 
 ## Docker-compose file
