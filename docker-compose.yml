@@ -12,6 +12,6 @@ services:
     ports:
       - "20516-20518:20516-20518"
     volumes:
-      - ./integrations.csv:/integrations.csv
+      - ./intakes.yaml:/intakes.yaml
       - ./conf:/etc/rsyslog.d
       - ./rsyslog:/var/spool/rsyslog

@@ -76,7 +76,7 @@ Volumes are used to share files and folders between the host and the container.
 
 ```yaml
     volumes:
-      - ./integrations.csv:/integrations.csv
+      - ./intakes.yaml:/intakes.yaml
       - ./conf:/etc/rsyslog.d
       - ./rsyslog:/var/spool/rsyslog
 ```
