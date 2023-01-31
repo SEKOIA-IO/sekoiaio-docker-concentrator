@@ -1,11 +1,14 @@
 ---
 intakes:
 - name: Techno1
+  protocol: tcp
   port: 20516
   intake_key: INTAKE_KEY_FOR_TECHNO_1
 - name: Techno2
+  protocol: UDP
   port: 20517
   intake_key: INTAKE_KEY_FOR_TECHNO_2
 - name: Techno3
+  protocol: tcp
   port: 20518
   intake_key: INTAKE_KEY_FOR_TECHNO_3
