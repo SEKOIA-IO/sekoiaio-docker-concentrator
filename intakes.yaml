@@ -5,7 +5,7 @@ intakes:
   port: 20516
   intake_key: INTAKE_KEY_FOR_TECHNO_1
 - name: Techno2
-  protocol: UDP
+  protocol: udp
   port: 20517
   intake_key: INTAKE_KEY_FOR_TECHNO_2
 - name: Techno3
