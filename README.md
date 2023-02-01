@@ -16,7 +16,7 @@ To be able to run the container you need :
 * OUTBOUND TCP flow to intake.sekoia.io on port 10514
 
 ## Docker-compose folder
-The docker compose folder the two files needed to start the container with docker-compose: `docker-compose.yml` and `intakes.yaml`
+The docker-compose folder contains the two files needed to start the container with docker compose: `docker-compose.yml` and `intakes.yaml`
 
 ### intakes.yaml file
 The `intakes.yaml` file is used to tell Rsyslog what ports and intake keys to use.
