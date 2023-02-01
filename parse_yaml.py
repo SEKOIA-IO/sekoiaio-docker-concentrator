@@ -8,4 +8,4 @@ with open("intakes.yaml", "r") as fyaml:
     with open('intakes.csv', 'w') as fcsv:
         csvwriter = csv.writer(fcsv, delimiter=';')
         for intake in data['intakes']:
-            csvwriter.writerow([intake['name'], intake['port'], intake['intake_key']])
+            csvwriter.writerow([intake['name'], intake['protocol'], intake['port'], intake['intake_key']])

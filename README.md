@@ -18,8 +18,9 @@ To be able to run the container you need :
 ## intakes.yaml file
 The `intakes.yaml` file is used to tell Rsyslog what ports and intake keys to use.
 In the `intakes` key, specify:
-* a name (no spaces allowed, but it has nothing to do with SEKOIA.IO, it can be a random value)
-* a port to process incoming events
+* a name (it has nothing to do with SEKOIA.IO, it can be a random value)
+* the protocol, tcp or udp
+* a port, to process incoming events
 * the intake key
 
 **Example**:
@@ -27,12 +28,15 @@ In the `intakes` key, specify:
 ---
 intakes:
 - name: Techno1
+  protocol: tcp
   port: 20516
   intake_key: INTAKE_KEY_FOR_TECHNO_1
 - name: Techno2
+  protocol: udp
   port: 20517
   intake_key: INTAKE_KEY_FOR_TECHNO_2
 - name: Techno3
+  protocol: tcp
   port: 20518
   intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
