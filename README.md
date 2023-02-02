@@ -12,10 +12,13 @@ To be able to run the container you need :
 
 * A x86-64 Linux host
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
-* INBOUND TCP flows between your systems/applications and this host on the ports of your choice
+* INBOUND TCP or UDP flows between your systems/applications and this host on the ports of your choice
 * OUTBOUND TCP flow to intake.sekoia.io on port 10514
 
-## intakes.yaml file
+## Docker-compose folder
+The docker-compose folder contains the two files needed to start the container with docker compose: `docker-compose.yml` and `intakes.yaml`
+
+### intakes.yaml file
 The `intakes.yaml` file is used to tell Rsyslog what ports and intake keys to use.
 In the `intakes` key, specify:
 * a name (it has nothing to do with SEKOIA.IO, it can be a random value)
@@ -41,10 +44,10 @@ intakes:
   intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
 
-## Docker-compose file
+### Docker-compose file
 To ease the deployment, a `docker-compose.yml` file is suggested and a template is given.
 
-### Logging
+#### Logging
 
 ```yaml
     logging:
@@ -54,7 +57,7 @@ To ease the deployment, a `docker-compose.yml` file is suggested and a template 
 ```
 Docker logging system give you the flexibility to view events received on the container in real time with the command `docker logs <container_name>`. These logs are stored by default in `/var/lib/docker/containers/<container_uuid>/<container_uuid>-json.log`. To avoid the overload of disk space, some options are specified. `max-size` specifies the max size a one file and `max-file` specifies the total number of files allowed. When the maximum number of files is reached, a log rotation is performed and the oldest file is deleted.
 
-### Environment variables
+#### Environment variables
 This image uses two environment variables to customize the container. These variables are used to define a queue for incoming logs in case there is an temporaly issue in transmitting events to SEKOIA.IO. The queue stores messages in memory up to a certain number of events and then store them on disk.
 
 ```yaml
@@ -65,7 +68,7 @@ This image uses two environment variables to customize the container. These vari
 * `MEMORY_MESSAGES=1000000` means the queue is allowed to store up to 100000 messages in memory. Since in the image configuration, the maximum value of a message is 20k, 100000 means `100000 * 20000 = 2G`
 * `DISK_SPACE=32g` means the queue is allowed to store on disk up to 32 giga of messages.
 
-### Ports
+#### Ports
 Ports in Docker are used to perform port forwarding between the host running the container and the container itself.
 ```yaml
     ports:
@@ -74,7 +77,7 @@ Ports in Docker are used to perform port forwarding between the host running the
 
 `20516-20518:20516-20518` means that every packets coming through the TCP port `20516`, `20517` or `20518` to the host will be forwarded to the Rsyslog container on the port `20516`, `20517` or `20518`. Please adapt these values accordingly to the `integrations.csv` file.
 
-### Volumes
+#### Volumes
 
 Volumes are used to share files and folders between the host and the container.
 
