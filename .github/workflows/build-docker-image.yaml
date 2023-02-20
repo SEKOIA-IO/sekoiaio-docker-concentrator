@@ -5,6 +5,8 @@ on:
   push:
     branches:
     - main
+  schedule:
+    - cron: "0 7 * * 1"
 
 jobs:
   build:
@@ -30,3 +32,4 @@ jobs:
         push: true
         tags: |
           ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest
+          ghcr.io/sekoia-io/sekoiaio-docker-concentrator:0.9
