@@ -12,8 +12,8 @@ To be able to run the container you need :
 
 * A x86-64 Linux host
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
-* INBOUND TCP or UDP flows between your systems/applications and this host on the ports of your choice
-* OUTBOUND TCP flow to intake.sekoia.io on port 10514
+* INBOUND TCP or UDP flows opened between the systems/applications and the concentrator on the ports of your choice
+* OUTBOUND TCP flow opened towards intake.sekoia.io on port 10514
 
 ## Docker-compose folder
 The docker-compose folder contains the two files needed to start the container with docker compose: `docker-compose.yml` and `intakes.yaml`
@@ -50,10 +50,10 @@ To ease the deployment, a `docker-compose.yml` file is suggested and a template 
 #### Logging
 
 ```yaml
-    logging:
-      options:
-        max-size: "1000m"
-        max-file: "2"
+logging:
+    options:
+    max-size: "1000m"
+    max-file: "2"
 ```
 Docker logging system give you the flexibility to view events received on the container in real time with the command `docker logs <container_name>`. These logs are stored by default in `/var/lib/docker/containers/<container_uuid>/<container_uuid>-json.log`. To avoid the overload of disk space, some options are specified. `max-size` specifies the max size a one file and `max-file` specifies the total number of files allowed. When the maximum number of files is reached, a log rotation is performed and the oldest file is deleted.
 
@@ -61,36 +61,46 @@ Docker logging system give you the flexibility to view events received on the co
 This image uses two environment variables to customize the container. These variables are used to define a queue for incoming logs in case there is an temporaly issue in transmitting events to SEKOIA.IO. The queue stores messages in memory up to a certain number of events and then store them on disk.
 
 ```yaml
-    environment:
-      - MEMORY_MESSAGES=100000
-      - DISK_SPACE=32g
+environment:
+    - MEMORY_MESSAGES=100000
+    - DISK_SPACE=32g
 ```
-* `MEMORY_MESSAGES=1000000` means the queue is allowed to store up to 100000 messages in memory. Since in the image configuration, the maximum value of a message is 20k, 100000 means `100000 * 20000 = 2G`
+* `MEMORY_MESSAGES=100000` means the queue is allowed to store up to 100,000 messages in memory. Since in the image configuration the maximum value of a message is 20ko, 100,000 means 100,000 * 20,000 = 2Go
 * `DISK_SPACE=32g` means the queue is allowed to store on disk up to 32 giga of messages.
 
 #### Ports
 Ports in Docker are used to perform port forwarding between the host running the container and the container itself.
 ```yaml
-    ports:
-      - "20516-20518:20516-20518"
+ports:
+    - "20516-20518:20516-20518"
 ```
 
-`20516-20518:20516-20518` means that every packets coming through the TCP port `20516`, `20517` or `20518` to the host will be forwarded to the Rsyslog container on the port `20516`, `20517` or `20518`. Please adapt these values accordingly to the `integrations.csv` file.
+`20516-20518:20516-20518` means that every packets coming through the TCP port `20516`, `20517` or `20518` to the host will be forwarded to the Rsyslog container on the port `20516`, `20517` or `20518`. Please adapt these values according to the `intakes.yaml` file.
 
 #### Volumes
 
 Volumes are used to share files and folders between the host and the container.
 
 ```yaml
-    volumes:
-      - ./intakes.yaml:/intakes.yaml
-      - ./conf:/etc/rsyslog.d
-      - ./rsyslog:/var/spool/rsyslog
+volumes:
+    - ./intakes.yaml:/intakes.yaml
+    - ./conf:/etc/rsyslog.d
+    - ./disk_queue:/var/spool/rsyslog
 ```
 
-* `./integrations.csv:/integrations.csv` is used to tell Rsyslog what ports and intake keys to use.
+* `./intakes.yaml:/intakes.yaml` is used to tell Rsyslog what ports and intake keys to use.
 * `./conf:/etc/rsyslog.d` is mapped if you want to customize some rsyslog configuration (ADVANCED)
-* `./rsyslog:/var/spool/rsyslog` is used when the rsyslog queue stores data on disk. The mapping avoids data loss if logs are stored on disk and the container is deleted.
+* `./disk_queue:/var/spool/rsyslog` is used when the rsyslog queue stores data on disk. The mapping avoids data loss if logs are stored on disk and the container is deleted.
+
+#### Additional options
+
+```yaml
+restart: always
+pull_policy: always
+```
+
+* `restart: always`: this line indicates to restart the concentrator everytime it stops. That means if it crashes, if you restart Docker or if you restart the host, the concentrator will start automatically.
+* `pull_policy: always`: docker compose will always try to pull the image from the registry and check if a new version is available for the tag specified.
 
 ## Usage
 To start (and create if needed) the container:
@@ -119,11 +129,11 @@ sudo docker compose rm
 ```
 
 ## OPTIONAL: Build the image
-If you don't want to use the image available at `ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest` - **NOT RECOMMENDED** -, you can also build the image on your own.
+If you don't want to use the image available at `ghcr.io/sekoia-io/sekoiaio-docker-concentrator` - **EXPERT MODE** -, you can also build the image on your own.
 
 To build the image:
 ```bash
 docker build . -t sekoiaio-docker-concentrator:latest
 ```
 
-**Note**: Be sure to adapt the `docker-compose.yml` accordingly and change `image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest` by `image: sekoiaio-docker-concentrator:latest` if you use this method.
+**Note**: Be sure to adapt the `docker-compose.yml` accordingly and change `image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:x` by `image: sekoiaio-docker-concentrator:latest` if you use this method.
