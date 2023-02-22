@@ -5,7 +5,7 @@ services:
       options:
         max-size: "1000m"
         max-file: "2"
-    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:0.9
     environment:
       - MEMORY_MESSAGES=100000
       - DISK_SPACE=32g
@@ -14,4 +14,6 @@ services:
     volumes:
       - ./intakes.yaml:/intakes.yaml
       - ./conf:/etc/rsyslog.d
-      - ./rsyslog:/var/spool/rsyslog
+      - ./disk_queue:/var/spool/rsyslog
+    restart: always
+    pull_policy: always
