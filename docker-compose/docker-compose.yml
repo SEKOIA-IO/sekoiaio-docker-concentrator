@@ -5,7 +5,7 @@ services:
       options:
         max-size: "1000m"
         max-file: "2"
-    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:0.9
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:1.0
     environment:
       - MEMORY_MESSAGES=100000
       - DISK_SPACE=32g
