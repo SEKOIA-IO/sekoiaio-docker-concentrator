@@ -1,5 +1,4 @@
-# SEKOIA.IO Docker concentrator - BETA
-**Important**: This project is currently in BETA
+# SEKOIA.IO Forwarder
 
 The files in this repository are used to build and create a Docker container running a Rsyslog as a concentrator to forward events to SEKOIA.IO.
 
@@ -35,7 +34,7 @@ intakes:
   port: 20516
   intake_key: INTAKE_KEY_FOR_TECHNO_1
 - name: Techno2
-  protocol: udp
+  protocol: tcp
   port: 20517
   intake_key: INTAKE_KEY_FOR_TECHNO_2
 - name: Techno3
@@ -55,7 +54,7 @@ logging:
     max-size: "1000m"
     max-file: "2"
 ```
-Docker logging system give you the flexibility to view events received on the container in real time with the command `docker logs <container_name>`. These logs are stored by default in `/var/lib/docker/containers/<container_uuid>/<container_uuid>-json.log`. To avoid the overload of disk space, some options are specified. `max-size` specifies the max size a one file and `max-file` specifies the total number of files allowed. When the maximum number of files is reached, a log rotation is performed and the oldest file is deleted.
+Docker logging system enables you to view events received on the container in real time with the command `docker logs <container_name>`. These logs are stored by default in `/var/lib/docker/containers/<container_uuid>/<container_uuid>-json.log`. To avoid the overload of disk space, some options are specified. `max-size` specifies the max size a one file and `max-file` specifies the total number of files allowed. When the maximum number of files is reached, a log rotation is performed and the oldest file is deleted.
 
 #### Environment variables
 This image uses two environment variables to customize the container. These variables are used to define a queue for incoming logs in case there is an temporaly issue in transmitting events to SEKOIA.IO. The queue stores messages in memory up to a certain number of events and then store them on disk.
