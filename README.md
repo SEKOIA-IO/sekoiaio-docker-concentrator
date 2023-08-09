@@ -9,7 +9,16 @@ The build is based on Ubuntu 22.04 and will install all the required components.
 ## Prerequisites
 To be able to run the container you need :
 
-* A x86-64 Linux host
+* A x86-64 Linux host using one of these templates :
+  | Number of assets |  vCPUs |  RAM (Go) | Disk size (Go) | Sekoia concentrator settings                |
+  |------------------|:------:|:---------:|:--------------:|:-------------------------------------------:|
+  | 1000             |    2   |   4       |      200       |  MEMORY_MESSAGES=2000000 / DISK_SPACE=180g  |
+  | 10 000           |    4   |   8       |      1000      |  MEMORY_MESSAGES=5000000 / DISK_SPACE=980g  |
+  | 50 000           |    6   |   16      |      5000      |  MEMORY_MESSAGES=12000000 / DISK_SPACE=4980g |
+
+  !!! info 
+      These data are recommendations based on standards and observed averages on Sekoia.io, so they may change depending on use cases.
+
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
 * INBOUND TCP or UDP flows opened between the systems/applications and the concentrator on the ports of your choice
 * OUTBOUND TCP flow opened towards intake.sekoia.io on port 10514
@@ -64,8 +73,10 @@ environment:
     - MEMORY_MESSAGES=100000
     - DISK_SPACE=32g
 ```
-* `MEMORY_MESSAGES=100000` means the queue is allowed to store up to 100,000 messages in memory. Since in the image configuration the maximum value of a message is 20ko, 100,000 means 100,000 * 20,000 = 2Go
+* `MEMORY_MESSAGES=100000` means the queue is allowed to store up to 100,000 messages in memory. For instance, if your message size is 20KB, then you will use 2GB of RAM memory (100,000 * 20KB = 2GB).
 * `DISK_SPACE=32g` means the queue is allowed to store on disk up to 32 giga of messages.
+
+[Here](#prerequisites) you will find recommendations to set these variables based on the number of input assets. You can also define your own values, which should be chosen according to your virtual machine's template.
 
 #### Ports
 Ports in Docker are used to perform port forwarding between the host running the container and the container itself.
