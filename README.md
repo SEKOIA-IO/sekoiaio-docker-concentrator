@@ -7,9 +7,9 @@ To catch incoming events and apply the right intake key, this image processes ea
 The build is based on Ubuntu 22.04 and will install all the required components.
 
 ## Prerequisites
-To be able to run the container you need :
+To be able to run the container you need:
 
-* A x86-64 Linux host using one of these templates :
+* A x86-64 Linux host using one of these templates:
   | Number of assets |  vCPUs |  RAM (Go) | Disk size (Go) | Sekoia concentrator settings                |
   |------------------|:------:|:---------:|:--------------:|:-------------------------------------------:|
   | 1000             |    2   |   4       |      200       |  MEMORY_MESSAGES=2000000 / DISK_SPACE=180g  |
@@ -76,7 +76,7 @@ environment:
 * `MEMORY_MESSAGES=100000` means the queue is allowed to store up to 100,000 messages in memory. For instance, if your message size is 20KB, then you will use 2GB of RAM memory (100,000 * 20KB = 2GB).
 * `DISK_SPACE=32g` means the queue is allowed to store on disk up to 32 giga of messages.
 
-[Here](#prerequisites) you will find recommendations to set these variables based on the number of input assets. You can also define your own values, which should be chosen according to your virtual machine's template.
+[Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
 
 #### Ports
 Ports in Docker are used to perform port forwarding between the host running the container and the container itself.
