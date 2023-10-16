@@ -17,6 +17,6 @@ for item in data.get("intakes", []):
     filename = f"/etc/rsyslog.d/{i}_{item['name'].lower()}.conf"
     # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
-        f.write(filename)
+        f.write(config)
     i=i+1
 
