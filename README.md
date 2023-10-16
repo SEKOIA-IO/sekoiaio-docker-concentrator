@@ -52,6 +52,28 @@ intakes:
   intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
 
+#### Debug 
+A debug variable is available in order to debug a specific intake, for example 
+```yaml
+---
+intakes:
+- name: Techno1
+  protocol: tcp
+  port: 20516
+  intake_key: INTAKE_KEY_FOR_TECHNO_1
+- name: Techno2
+  protocol: tcp
+  port: 20517
+  intake_key: INTAKE_KEY_FOR_TECHNO_2
+  debug: True
+- name: Techno3
+  protocol: tcp
+  port: 20518
+  intake_key: INTAKE_KEY_FOR_TECHNO_3
+```
+
+By using this key, the raw received message and the output message will be printed in the console
+
 ### Docker-compose file
 To ease the deployment, a `docker-compose.yml` file is suggested and a template is given.
 
