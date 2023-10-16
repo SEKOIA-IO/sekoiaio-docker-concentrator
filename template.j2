@@ -1,9 +1,10 @@
 input(type="im{{ protocol | lower }}" port="{{ port }}" ruleset="remote{{ port }}")
 
 {% if debug %}
-template(name="SEKOIAIO_{{ name |lower }}_Debug_Template" type="string" string="[DEBUG \"{{ intake_key }}\"] %rawmsg%\n")
+template(name="SEKOIAIO_{{ name |lower }}_Input_Template" type="string" string="[Input \"{{ intake_key }}\"] %rawmsg%\n")
+template(name="SEKOIAIO_{{ name |lower }}_Output_Template" type="string" string="[Output \"{{ intake_key }}\"] <%pri%>1 %timestamp:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg:R,ERE,1,FIELD:^[ \t]*(.*)$--end%\n")
 {% endif %}
-template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="<%pri%>1 %timestamp:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg%\n")
+template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="<%pri%>1 %timestamp:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg:R,ERE,1,FIELD:^[ \t]*(.*)$--end%\n")
 ruleset(name="remote{{ port }}"){
 action(
     type="omfwd"
@@ -22,12 +23,12 @@ action(
 action(
     type="omfile"
     file="/dev/stdout"
-    Template="SEKOIAIO_{{ name |lower }}_Debug_Template"
+    Template="SEKOIAIO_{{ name |lower }}_Input_Template"
     )
 action(
     type="omfile"
     file="/dev/stdout"
-    Template="SEKOIAIO_{{ name |lower }}_Template"
+    Template="SEKOIAIO_{{ name |lower }}_Output_Template"
     )
 {% endif %}
     

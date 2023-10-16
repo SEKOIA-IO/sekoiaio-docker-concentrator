@@ -72,7 +72,7 @@ intakes:
   intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
 
-By using this key, the raw received message and the output message will be printed in the console
+By using this key, the raw received message and the output message will be printed in the console. Each one will be respectively identified using tags: : [Input $INTAKE_KEY] & [Output $INTAKE_KEY]
 
 ### Docker-compose file
 To ease the deployment, a `docker-compose.yml` file is suggested and a template is given.
