@@ -16,7 +16,7 @@ action(
     )
 
 {% if debug %}
-template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="%rawmsg%\n")
+template(name="SEKOIAIO_{{ name |lower }}_Debug_Template" type="string" string="%rawmsg%\n")
 action(
     type="omfile"
     file="/dev/stdout"
