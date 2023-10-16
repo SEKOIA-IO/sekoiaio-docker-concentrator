@@ -1,0 +1,32 @@
+input(type="im{{ protocol | lower }}" port="{{ port }}" ruleset="remote{{ port }}")
+
+template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="<%pri%>1 %timestamp:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg%\n")
+ruleset(name="remote{{ port }}"){
+action(
+    type="omfwd"
+    protocol="tcp"
+    target="intake.sekoia.io"
+    port="10514"
+    TCP_Framing="octet-counted"
+    StreamDriver="gtls"
+    StreamDriverMode="1"
+    StreamDriverAuthMode="x509/name"
+    StreamDriverPermittedPeers="intake.sekoia.io"
+    Template="SEKOIAIO_{{ name | lower }}_Template"
+    )
+
+{% if debug %}
+template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="%rawmsg%\n")
+action(
+    type="omfile"
+    file="/dev/stdout"
+    Template="SEKOIAIO_{{ name |lower }}_Debug_Template"
+    )
+action(
+    type="omfile"
+    file="/dev/stdout"
+    Template="SEKOIAIO_{{ name |lower }}_Template"
+    )
+{% endif %}
+    
+}
