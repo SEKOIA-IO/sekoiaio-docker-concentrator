@@ -150,6 +150,11 @@ To view container logs:
 sudo docker compose logs
 ```
 
+To view container logs for a specific intake:
+```bash
+sudo docker compose logs | grep "YOUR_INTAKE_KEY"
+```
+
 To stop the container:
 ```bash
 sudo docker compose stop
