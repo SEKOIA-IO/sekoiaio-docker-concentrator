@@ -6,7 +6,7 @@ All notable changes with sekoiaio concentrator will be documented in this file.
 
 - Manage syslog RFC 3164 (only 5424 in 1.0 version)
 - Add advanced debug options
-- Update implemention from bash to jinja
+- Update implementation from bash to jinja
 
 ## [1.0] 
 
