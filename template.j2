@@ -19,7 +19,7 @@ action(
     Template="SEKOIAIO_{{ name | lower }}_Template"
     )
 
-{% if debug %}
+{% if ( debug | lower ) == "true"  %}
 action(
     type="omfile"
     file="/dev/stdout"
