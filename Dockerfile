@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     gettext-base \
     python3 \
     python3-yaml \
+    python3-jinja2 \
     wget
 
 RUN wget -O /SEKOIA-IO-intake.pem https://app.sekoia.io/assets/files/SEKOIA-IO-intake.pem
@@ -17,11 +18,11 @@ ENV MEMORY_MESSAGES=100000
 # Setting up Rsyslog
 RUN rm -rf /etc/rsyslog.d/50-default.conf
 
-COPY parse_yaml.py parse_yaml.py
+COPY generate_config.py generate_config.py
 COPY rsyslog.conf rsyslog.conf
 COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml
-COPY template.conf template.conf
+COPY template.j2 template.j2
 
 RUN chmod +x entrypoint.sh
 
