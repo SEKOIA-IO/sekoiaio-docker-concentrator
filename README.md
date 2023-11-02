@@ -72,31 +72,21 @@ intakes:
   intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
 
-By using this key, the raw received message and the output message will be printed in the console. Each one will be respectively identified using tags: : [Input $INTAKE_KEY] & [Output $INTAKE_KEY]
+When debug is set to true, the raw event received and the output message will be printed in STDOUT. Each one will be respectively identified using tags: : [Input $INTAKE_KEY] & [Output $INTAKE_KEY]
 
 ### Docker-compose file
 To ease the deployment, a `docker-compose.yml` file is suggested and a template is given.
-
-#### Logging
-
-```yaml
-logging:
-    options:
-    max-size: "1000m"
-    max-file: "2"
-```
-Docker logging system enables you to view events received on the container in real time with the command `docker logs <container_name>`. These logs are stored by default in `/var/lib/docker/containers/<container_uuid>/<container_uuid>-json.log`. To avoid the overload of disk space, some options are specified. `max-size` specifies the max size a one file and `max-file` specifies the total number of files allowed. When the maximum number of files is reached, a log rotation is performed and the oldest file is deleted.
 
 #### Environment variables
 This image uses two environment variables to customize the container. These variables are used to define a queue for incoming logs in case there is an temporaly issue in transmitting events to Sekoia.io. The queue stores messages in memory up to a certain number of events and then store them on disk.
 
 ```yaml
 environment:
-    - MEMORY_MESSAGES=100000
-    - DISK_SPACE=32g
+    - MEMORY_MESSAGES=2000000
+    - DISK_SPACE=180g
 ```
-* `MEMORY_MESSAGES=100000` means the queue is allowed to store up to 100,000 messages in memory. For instance, if your message size is 20KB, then you will use 2GB of RAM memory (100,000 * 20KB = 2GB).
-* `DISK_SPACE=32g` means the queue is allowed to store on disk up to 32 giga of messages.
+* `MEMORY_MESSAGES=2000000` means the queue is allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB).
+* `DISK_SPACE=180g` means the queue is allowed to store on disk up to 180 giga of messages.
 
 [Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
 
@@ -145,12 +135,12 @@ To start (and create if needed) the container in interactive mode:
 sudo docker compose up
 ```
 
-To view container logs:
+To view container logs when using the Debug variable:
 ```bash
 sudo docker compose logs
 ```
 
-To view container logs for a specific intake:
+To view container logs for a specific intake when using the Debug variable:
 ```bash
 sudo docker compose logs | grep "YOUR_INTAKE_KEY"
 ```

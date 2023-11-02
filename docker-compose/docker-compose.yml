@@ -1,16 +1,13 @@
 version: "3.9"
 services:
   rsyslog:
-    logging:
-      options:
-        max-size: "1000m"
-        max-file: "2"
     image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.0
     environment:
-      - MEMORY_MESSAGES=100000
-      - DISK_SPACE=32g
+      - MEMORY_MESSAGES=2000000
+      - DISK_SPACE=180g
     ports:
-      - "20516-20518:20516-20518"
+      - "20516-20566:20516-20566"
+      - "20516-20566:20516-20566/udp"
     volumes:
       - ./intakes.yaml:/intakes.yaml
       - ./conf:/etc/rsyslog.d
