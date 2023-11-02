@@ -82,11 +82,11 @@ This image uses two environment variables to customize the container. These vari
 
 ```yaml
 environment:
-    - MEMORY_MESSAGES=100000
-    - DISK_SPACE=32g
+    - MEMORY_MESSAGES=2000000
+    - DISK_SPACE=180g
 ```
-* `MEMORY_MESSAGES=100000` means the queue is allowed to store up to 100,000 messages in memory. For instance, if your message size is 20KB, then you will use 2GB of RAM memory (100,000 * 20KB = 2GB).
-* `DISK_SPACE=32g` means the queue is allowed to store on disk up to 32 giga of messages.
+* `MEMORY_MESSAGES=2000000` means the queue is allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB).
+* `DISK_SPACE=180g` means the queue is allowed to store on disk up to 180 giga of messages.
 
 [Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
 
@@ -140,7 +140,7 @@ To view container logs when using the Debug variable:
 sudo docker compose logs
 ```
 
-To view container logs for a specific intake when you use the Debug variable:
+To view container logs for a specific intake when using the Debug variable:
 ```bash
 sudo docker compose logs | grep "YOUR_INTAKE_KEY"
 ```
