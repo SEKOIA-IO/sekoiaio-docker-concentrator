@@ -72,20 +72,10 @@ intakes:
   intake_key: INTAKE_KEY_FOR_TECHNO_3
 ```
 
-By using this key, the raw received message and the output message will be printed in the console. Each one will be respectively identified using tags: : [Input $INTAKE_KEY] & [Output $INTAKE_KEY]
+When debug is set to true, the raw event received and the output message will be printed in STDOUT. Each one will be respectively identified using tags: : [Input $INTAKE_KEY] & [Output $INTAKE_KEY]
 
 ### Docker-compose file
 To ease the deployment, a `docker-compose.yml` file is suggested and a template is given.
-
-#### Logging
-
-```yaml
-logging:
-    options:
-    max-size: "1000m"
-    max-file: "2"
-```
-Docker logging system enables you to view events received on the container in real time with the command `docker logs <container_name>`. These logs are stored by default in `/var/lib/docker/containers/<container_uuid>/<container_uuid>-json.log`. To avoid the overload of disk space, some options are specified. `max-size` specifies the max size a one file and `max-file` specifies the total number of files allowed. When the maximum number of files is reached, a log rotation is performed and the oldest file is deleted.
 
 #### Environment variables
 This image uses two environment variables to customize the container. These variables are used to define a queue for incoming logs in case there is an temporaly issue in transmitting events to Sekoia.io. The queue stores messages in memory up to a certain number of events and then store them on disk.
@@ -145,12 +135,12 @@ To start (and create if needed) the container in interactive mode:
 sudo docker compose up
 ```
 
-To view container logs:
+To view container logs when using the Debug variable:
 ```bash
 sudo docker compose logs
 ```
 
-To view container logs for a specific intake:
+To view container logs for a specific intake when you use the Debug variable:
 ```bash
 sudo docker compose logs | grep "YOUR_INTAKE_KEY"
 ```
