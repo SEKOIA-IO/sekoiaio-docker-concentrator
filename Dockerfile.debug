@@ -1,5 +1,8 @@
 FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y \
+    software-properties-common
+RUN add-apt-repository ppa:adiscon/v8-stable
+RUN apt-get update && apt-get install -y \
     rsyslog \
     rsyslog-gnutls \
     gettext-base \
@@ -9,6 +12,23 @@ RUN apt-get update && apt-get install -y \
     wget
 
 RUN wget -O /SEKOIA-IO-intake.pem https://app.sekoia.io/assets/files/SEKOIA-IO-intake.pem
+
+# Rrsyslog build for debugging
+RUN wget https://www.rsyslog.com/files/download/rsyslog/rsyslog-8.2310.0.tar.gz
+RUN tar -zxvf rsyslog-8.2310.0.tar.gz
+RUN apt-get install -y \
+    gcc \
+    libtool \
+    zlib1g zlib1g-dev \
+    libfastjson-dev \
+    libestr-dev \
+    pkg-config \
+    uuid-dev \
+    libgcrypt-dev \
+    libcurl3-dev \
+    make \
+    net-tools
+RUN cd rsyslog-8.2310.0 && ./configure && cd tests && make tcpflood && cd ../..
 
 # Setting default environement variables
 ENV DISK_SPACE=32g
@@ -22,9 +42,7 @@ COPY rsyslog.conf rsyslog.conf
 COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml
 COPY template.j2 template.j2
-COPY rsyslog-logrotate /etc/logrotate.d/rsyslog-logrotate
 
-RUN ln -s /etc/cron.daily/logrotate /etc/cron.hourly/logrotate
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

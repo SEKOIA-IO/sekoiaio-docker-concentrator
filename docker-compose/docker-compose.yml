@@ -5,6 +5,8 @@ services:
     environment:
       - MEMORY_MESSAGES=2000000
       - DISK_SPACE=180g
+      - RSYSLOG_DEBUGLOG=/var/log/rsyslog-debug.log
+      - RSYSLOG_DEBUG=Debug NoStdOut
     ports:
       - "20516-20566:20516-20566"
       - "20516-20566:20516-20566/udp"
@@ -12,5 +14,6 @@ services:
       - ./intakes.yaml:/intakes.yaml
       - ./conf:/etc/rsyslog.d
       - ./disk_queue:/var/spool/rsyslog
+      - ./logs:/var/log
     restart: always
     pull_policy: always
