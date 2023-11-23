@@ -22,9 +22,7 @@ COPY rsyslog.conf rsyslog.conf
 COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml
 COPY template.j2 template.j2
-COPY rsyslog-logrotate /etc/logrotate.d/rsyslog-logrotate
 
-RUN ln -s /etc/cron.daily/logrotate /etc/cron.hourly/logrotate
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

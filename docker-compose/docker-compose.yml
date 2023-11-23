@@ -1,12 +1,15 @@
 version: "3.9"
 services:
   rsyslog:
+    logging:
+      options:
+        max-size: "1000m"
+        max-file: "20"
     image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.1
     environment:
       - MEMORY_MESSAGES=2000000
       - DISK_SPACE=180g
-      - RSYSLOG_DEBUGLOG=/var/log/rsyslog-debug.log
-      - RSYSLOG_DEBUG=Debug NoStdOut
+      - RSYSLOG_DEBUG=Debug
     ports:
       - "20516-20566:20516-20566"
       - "20516-20566:20516-20566/udp"
@@ -17,3 +20,4 @@ services:
       - ./logs:/var/log
     restart: always
     pull_policy: always
+  
