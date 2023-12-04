@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   rsyslog:
-    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.1-fix
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.2
     ports:
       - "20516-20566:20516-20566"
       - "20516-20566:20516-20566/udp"

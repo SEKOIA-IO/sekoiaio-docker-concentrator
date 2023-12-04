@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.2]
+
+- Remove queue for performance
+
 ## [2.1]
 
 - Add local timestamp in rsyslog header instead of received timestamp 
