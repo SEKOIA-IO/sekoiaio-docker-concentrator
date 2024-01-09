@@ -1,9 +1,14 @@
 # Changelog
 
 All notable changes with sekoiaio concentrator will be documented in this file.
-## [2.2]
+
+## [2.3]
 
 - Improve performances for multiple ruleset configuration (ref: https://www.rsyslog.com/doc/concepts/multi_ruleset.html#rulesets-and-queues)
+
+## [2.2]
+
+- Update main queue settings
 
 ## [2.1]
 
