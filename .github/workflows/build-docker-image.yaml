@@ -32,4 +32,4 @@ jobs:
         push: true
         tags: |
           ghcr.io/sekoia-io/sekoiaio-docker-concentrator:latest
-          ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.3
+          ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.4
