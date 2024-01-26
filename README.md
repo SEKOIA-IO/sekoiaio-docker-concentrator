@@ -106,13 +106,46 @@ Volumes are used to share files and folders between the host and the container.
 ```yaml
 volumes:
     - ./intakes.yaml:/intakes.yaml
-    - ./conf:/etc/rsyslog.d
     - ./disk_queue:/var/spool/rsyslog
 ```
 
 * `./intakes.yaml:/intakes.yaml` is used to tell Rsyslog what ports and intake keys to use.
-* `./conf:/etc/rsyslog.d` is mapped if you want to customize some rsyslog configuration (ADVANCED)
 * `./disk_queue:/var/spool/rsyslog` is used when the rsyslog queue stores data on disk. The mapping avoids data loss if logs are stored on disk and the container is deleted.
+
+#### Import a custom rsyslog configuration 
+
+You can add your own additional rsyslog configuration. It can be useful to deal with specific use cases which are not supported natively by the Sekoia.io concentrator. To enable it, you simply have to create a new folder called `extended_conf` and put an additional your rsyslog file into (your file must have the extension *.conf). You do not have to deal with the `intake.yaml` file. Your custom configuration will be added in addition to the intake definition and will not erase exisiting ones. 
+
+You can define your own method for obtaining logs using rsyslog modules, but you still need to forward events to Sekoia.io by providing a syslog-valid message with your intake key as a header, as follows:
+
+```bash
+input(type="imtcp" port="20521" ruleset="remote20521")
+template(name="SEKOIAIO_Template" type="string" string="<%pri%>1 %timegenerated:::date-rfc3339% %hostname% MY-APP-NAME - LOG [SEKOIA@53288 intake_key=\"MY-INTAKE-KEY\"] %msg%\n")
+ruleset(name="remote20521"){
+action(
+    name="action"
+    type="omfwd"
+    protocol="tcp"
+    target="intake.sekoia.io"
+    port="10514"
+    TCP_Framing="octet-counted"
+    StreamDriver="gtls"
+    StreamDriverMode="1"
+    StreamDriverAuthMode="x509/name"
+    StreamDriverPermittedPeers="intake.sekoia.io"
+    Template="SEKOIAIO_Template"
+    )
+}
+```
+
+Once additional configuration has been added, you simply have to mount them in the docker as following: 
+
+```yaml
+volumes:
+    - ./intakes.yaml:/intakes.yaml
+    - ./extended_conf:/extended_conf
+    - ./disk_queue:/var/spool/rsyslog
+```
 
 #### Additional options
 
