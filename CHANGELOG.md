@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.5]
+
+- Added the support of multi-region
+
 ## [2.4]
 
 - Capacity to import a custom rsyslog configuration

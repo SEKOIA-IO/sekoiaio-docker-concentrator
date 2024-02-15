@@ -14,6 +14,7 @@ RUN wget -O /SEKOIA-IO-intake.pem https://app.sekoia.io/assets/files/SEKOIA-IO-i
 # Setting default environement variables
 ENV DISK_SPACE=32g
 ENV MEMORY_MESSAGES=100000
+ENV REGION=FRA1
 
 # Setting up Rsyslog
 RUN rm -rf /etc/rsyslog.d/50-default.conf

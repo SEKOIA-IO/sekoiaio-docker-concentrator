@@ -21,7 +21,12 @@ To be able to run the container you need:
 
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
 * INBOUND TCP or UDP flows opened between the systems/applications and the concentrator on the ports of your choice
-* OUTBOUND TCP flow opened towards intake.sekoia.io on port 10514
+* OUTBOUND TCP flow opened towards:
+  * **FRA1** intake.sekoia.io on port 10514 
+  * **FRA2** fra2.app.sekoia.io on port 10514 
+  * **MCO1** mco1.app.sekoia.io on port 10514 
+  * **EUA1** app.uae1.sekoia.io on port 10514 
+  
 
 ## Docker-compose folder
 The docker-compose folder contains the two files needed to start the container with docker compose: `docker-compose.yml` and `intakes.yaml`
@@ -84,9 +89,11 @@ This image uses two environment variables to customize the container. These vari
 environment:
     - MEMORY_MESSAGES=2000000
     - DISK_SPACE=180g
+    - REGION=FRA1
 ```
 * `MEMORY_MESSAGES=2000000` means the queue is allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB).
 * `DISK_SPACE=180g` means the queue is allowed to store on disk up to 180 giga of messages.
+* `REGION=FRA1` is the region where to send the logs. Currently 4 options are available: `FRA1`, `FRA2`, `MCO1` and `UAE1`
 
 [Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
 

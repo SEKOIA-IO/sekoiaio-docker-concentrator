@@ -10,13 +10,13 @@ action(
     name="action{{ name |lower }}"
     type="omfwd"
     protocol="tcp"
-    target="intake.sekoia.io"
+    target="{{ endpoint }}"
     port="10514"
     TCP_Framing="octet-counted"
     StreamDriver="gtls"
     StreamDriverMode="1"
     StreamDriverAuthMode="x509/name"
-    StreamDriverPermittedPeers="intake.sekoia.io"
+    StreamDriverPermittedPeers="{{ endpoint }}"
     Template="SEKOIAIO_{{ name | lower }}_Template"
     )
 
