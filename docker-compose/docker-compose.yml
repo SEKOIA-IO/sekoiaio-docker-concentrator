@@ -1,10 +1,11 @@
 version: "3.9"
 services:
   rsyslog:
-    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.4
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.5
     environment:
       - MEMORY_MESSAGES=2000000
       - DISK_SPACE=180g
+      - REGION=FRA1
     ports:
       - "20516-20566:20516-20566"
       - "20516-20566:20516-20566/udp"
