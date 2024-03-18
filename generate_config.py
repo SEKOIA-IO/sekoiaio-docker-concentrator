@@ -38,3 +38,7 @@ for item in data.get("intakes", []):
         f.write(config)
     i=i+1
 
+# Check additional conf
+for file in os.listdir("/extended_conf/"):
+    if file.endswith(".conf"):
+        print("Detected an additonal intake defined in file {}".format(file))
