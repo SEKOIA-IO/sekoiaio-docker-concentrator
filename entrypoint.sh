@@ -2,8 +2,6 @@
 
 echo "Starting Entrypoint"
 echo ""
-echo "These Intakes have been set up"
-echo "-----------------------------"
 
 # Create rsyslog.conf
 envsubst '${DISK_SPACE} ${MEMORY_MESSAGES}' <rsyslog.conf >/etc/rsyslog.conf
