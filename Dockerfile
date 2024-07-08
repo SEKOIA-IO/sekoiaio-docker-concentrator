@@ -24,6 +24,7 @@ COPY rsyslog.conf rsyslog.conf
 COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml
 COPY template.j2 template.j2
+COPY template_tls.j2 template_tls.j2
 
 RUN chmod +x entrypoint.sh
 

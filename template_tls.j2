@@ -1,0 +1,46 @@
+input(type="imtcp"
+      port="{{ port }}"
+      ruleset="remote{{ port }}"
+      StreamDriver.Name="gtls"
+      StreamDriver.Mode="1"
+      StreamDriver.AuthMode="anon"
+      streamDriver.KeyFile="/certs/{{ tls_key_name | default("server") }}.key"
+      streamDriver.CertFile="/certs/{{ tls_cert_name | default("server")}}.crt"
+      streamDriver.CAFile="/certs/{{ tls_ca_name | default("server") }}.crt")
+
+{% if debug %}
+template(name="SEKOIAIO_{{ name |lower }}_Input_Template" type="string" string="[Input \"{{ intake_key }}\"] %rawmsg%\n")
+template(name="SEKOIAIO_{{ name |lower }}_Output_Template" type="string" string="[Output \"{{ intake_key }}\"] <%pri%>1 %timegenerated:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg:R,ERE,1,FIELD:^[ \t]*(.*)$--end%\n")
+{% endif %}
+
+
+template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="<%pri%>1 %timegenerated:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg:R,ERE,1,FIELD:^[ \t]*(.*)$--end%\n")
+ruleset(name="remote{{ port }}" queue.type="LinkedList" queue.filename="sekoia_{{ name |lower }}_queue" queue.saveOnShutdown="on"){
+action(
+    name="action{{ name |lower }}"
+    type="omfwd"
+    protocol="tcp"
+    target="{{ endpoint }}"
+    port="10514"
+    TCP_Framing="octet-counted"
+    StreamDriver="gtls"
+    StreamDriverMode="1"
+    StreamDriverAuthMode="x509/name"
+    StreamDriverPermittedPeers="intake.sekoia.io"
+    Template="SEKOIAIO_{{ name |lower }}_Template"
+    )
+
+{% if ( debug | lower ) == "true"  %}
+action(
+    type="omfile"
+    file="/dev/stdout"
+    Template="SEKOIAIO_{{ name |lower }}_Input_Template"
+    )
+action(
+    type="omfile"
+    file="/dev/stdout"
+    Template="SEKOIAIO_{{ name |lower }}_Output_Template"
+    )
+{% endif %}
+    
+}
