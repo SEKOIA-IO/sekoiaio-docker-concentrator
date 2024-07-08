@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.5.1]
+
+- Check the format of Intake keys.
+
 ## [2.5]
 
 - Added the support of multi-region
