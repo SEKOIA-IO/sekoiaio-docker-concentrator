@@ -7,7 +7,7 @@ import yaml
 from jinja2 import Environment, FileSystemLoader
 
 
-def is_intake_key(intake_key: str) -> re.Match | bool:
+def is_intake_key(intake_key: str) -> re.Match[str] | None:
     pattern = "^[a-zA-Z0-9]{16}"
     return re.search(pattern, intake_key)
 
@@ -18,9 +18,12 @@ with open("intakes.yaml", "r") as fyaml:
 
 # Load jinja template
 template = Environment(loader=FileSystemLoader(".")).get_template("template.j2")
+template_tls = Environment(loader=FileSystemLoader(".")).get_template("template_tls.j2")
 
 # Identify the region
-region = os.getenv("REGION").lower()
+region = os.getenv("REGION")
+if region:
+    region = region.lower()
 if region == "fra2":
     endpoint = "fra2.app.sekoia.io"
 elif region == "mco1":
@@ -49,7 +52,11 @@ for item in data.get("intakes", []):
     to_print.append("Intake key: " + str(item["intake_key"]))
     to_print.append("")
     item["endpoint"] = endpoint
-    config = template.render(item)
+
+    if item["protocol"].lower() == "tls":
+        config = template_tls.render(item)
+    else:
+        config = template.render(item)
     filename = f"/etc/rsyslog.d/{i}_{item['name'].lower()}.conf"
     # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:

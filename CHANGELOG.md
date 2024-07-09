@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.6.0]
+
+- Add the support of TLS
+
 ## [2.5.1]
 
 - Check the format of Intake keys.
