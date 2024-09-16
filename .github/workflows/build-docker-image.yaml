@@ -31,4 +31,4 @@ jobs:
       with:
         push: true
         tags: |
-          ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.6.0
+          ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.7.0
