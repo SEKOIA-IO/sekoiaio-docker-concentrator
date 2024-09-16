@@ -1,6 +1,7 @@
 input(type="imtcp"
       port="{{ port }}"
-      ruleset="remote{{ port }}"
+      ruleset="ruleset-{{ name | lower}}"
+      name="input-{{ name | lower}}"
       StreamDriver.Name="gtls"
       StreamDriver.Mode="1"
       StreamDriver.AuthMode="anon"
@@ -15,9 +16,9 @@ template(name="SEKOIAIO_{{ name |lower }}_Output_Template" type="string" string=
 
 
 template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="<%pri%>1 %timegenerated:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg:R,ERE,1,FIELD:^[ \t]*(.*)$--end%\n")
-ruleset(name="remote{{ port }}" queue.type="LinkedList" queue.filename="sekoia_{{ name |lower }}_queue" queue.saveOnShutdown="on"){
+ruleset(name="ruleset-{{ name | lower}}" queue.type="LinkedList" queue.filename="sekoia_{{ name |lower }}_queue" queue.saveOnShutdown="on"){
 action(
-    name="action{{ name |lower }}"
+    name="output-{{ name |lower }}"
     type="omfwd"
     protocol="tcp"
     target="{{ endpoint }}"
@@ -34,11 +35,13 @@ action(
 action(
     type="omfile"
     file="/dev/stdout"
+    name="debugin-{{ name | lower}}"
     Template="SEKOIAIO_{{ name |lower }}_Input_Template"
     )
 action(
     type="omfile"
     file="/dev/stdout"
+    name="debugout-{{ name | lower}}"
     Template="SEKOIAIO_{{ name |lower }}_Output_Template"
     )
 {% endif %}

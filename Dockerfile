@@ -20,6 +20,7 @@ ENV REGION=FRA1
 RUN rm -rf /etc/rsyslog.d/50-default.conf
 
 COPY generate_config.py generate_config.py
+COPY rsyslog-stats /etc/logrotate.d/rsyslog-stats
 COPY rsyslog.conf rsyslog.conf
 COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml

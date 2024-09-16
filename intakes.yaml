@@ -12,3 +12,6 @@ intakes:
   protocol: tcp
   port: 20518
   intake_key: INTAKE_KEY_FOR_TECHNO_3
+- name: Forwarder_log 
+  stats: true 
+  intake_key:  WzZeGiyxx9P1DsnyYbin4L1Lc5FA4JsS

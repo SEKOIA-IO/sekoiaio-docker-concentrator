@@ -11,6 +11,14 @@ def is_intake_key(intake_key: str) -> re.Match[str] | None:
     pattern = "^[a-zA-Z0-9]{16}"
     return re.search(pattern, intake_key)
 
+def activate_monitoring(intake_key: str):
+    to_print.append("Forwarder monitoring is active")
+    to_print.append("Intake key: " + str(item["intake_key"]))
+    config = template_stats.render(item)
+    filename = f"/etc/rsyslog.d/stats_{item['name'].lower()}.conf"
+    # Écrire le contenu généré dans le fichier
+    with open(filename, "w") as f:
+        f.write(config)
 
 # Open input config file
 with open("intakes.yaml", "r") as fyaml:
@@ -19,6 +27,7 @@ with open("intakes.yaml", "r") as fyaml:
 # Load jinja template
 template = Environment(loader=FileSystemLoader(".")).get_template("template.j2")
 template_tls = Environment(loader=FileSystemLoader(".")).get_template("template_tls.j2")
+template_stats = Environment(loader=FileSystemLoader(".")).get_template("stats_template.j2")
 
 # Identify the region
 region = os.getenv("REGION")
@@ -45,13 +54,19 @@ for item in data.get("intakes", []):
             f"ERROR: The Intake Key provided for Intake Name {item['name'].lower()} is incorrect. Exiting..."
         )
         exit(0)
+    
+    item["endpoint"] = endpoint
+    
+    if item.get("stats") is not None: 
+        print(item["stats"])
+        activate_monitoring(item["intake_key"])
+        continue
 
     to_print.append("Intake name: " + str(item["name"].lower()))
     to_print.append("Protocol: " + str(item["protocol"]))
     to_print.append("Port: " + str(item["port"]))
     to_print.append("Intake key: " + str(item["intake_key"]))
     to_print.append("")
-    item["endpoint"] = endpoint
 
     if item["protocol"].lower() == "tls":
         config = template_tls.render(item)
