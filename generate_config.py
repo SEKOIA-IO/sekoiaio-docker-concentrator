@@ -62,18 +62,19 @@ for item in data.get("intakes", []):
 
     item["endpoint"] = endpoint
 
-    to_print.append("Intake name: " + str(item["name"]))
-    to_print.append("Protocol: " + str(item["protocol"]))
-    to_print.append("Port: " + str(item["port"]))
-    to_print.append("Intake key: " + str(item["intake_key"]))
-    to_print.append("")
-
+    name_origin = item["name"]
     item["name"] = item["name"].replace(" ", "_").lower()
 
     if item.get("stats") is not None and item.get("stats") is not False:
         print(item["stats"])
         activate_monitoring(item)
         continue
+
+    to_print.append("Intake name: " + str(name_origin))
+    to_print.append("Protocol: " + str(item["protocol"]))
+    to_print.append("Port: " + str(item["port"]))
+    to_print.append("Intake key: " + str(item["intake_key"]))
+    to_print.append("")
 
     if item["protocol"].lower() == "tls":
         config = template_tls.render(item)
