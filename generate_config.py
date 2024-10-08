@@ -12,6 +12,17 @@ def is_intake_key(intake_key: str) -> re.Match[str] | None:
     return re.search(pattern, intake_key)
 
 
+def activate_monitoring(item: dict[str, str]) -> None:
+    to_print.append("Forwarder monitoring is active")
+    to_print.append("Intake key: " + str(item["intake_key"]))
+    to_print.append("")
+    config = template_stats.render(item)
+    filename = f"/etc/rsyslog.d/stats_{item['name']}.conf"
+    # Écrire le contenu généré dans le fichier
+    with open(filename, "w") as f:
+        f.write(config)
+
+
 # Open input config file
 with open("intakes.yaml", "r") as fyaml:
     data = yaml.safe_load(fyaml)
@@ -19,6 +30,9 @@ with open("intakes.yaml", "r") as fyaml:
 # Load jinja template
 template = Environment(loader=FileSystemLoader(".")).get_template("template.j2")
 template_tls = Environment(loader=FileSystemLoader(".")).get_template("template_tls.j2")
+template_stats = Environment(loader=FileSystemLoader(".")).get_template(
+    "stats_template.j2"
+)
 
 # Identify the region
 region = os.getenv("REGION")
@@ -42,22 +56,30 @@ to_print.append("-----------------------------")
 for item in data.get("intakes", []):
     if not is_intake_key(item["intake_key"]):
         print(
-            f"ERROR: The Intake Key provided for Intake Name {item['name'].lower()} is incorrect. Exiting..."
+            f"ERROR: The Intake Key provided for Intake Name {item['name']} is incorrect. Exiting..."
         )
         exit(0)
 
-    to_print.append("Intake name: " + str(item["name"].lower()))
+    item["endpoint"] = endpoint
+
+    name_origin = item["name"]
+    item["name"] = item["name"].replace(" ", "_").lower()
+
+    if item.get("stats") is not None and item.get("stats") is not False:
+        activate_monitoring(item)
+        continue
+
+    to_print.append("Intake name: " + str(name_origin))
     to_print.append("Protocol: " + str(item["protocol"]))
     to_print.append("Port: " + str(item["port"]))
     to_print.append("Intake key: " + str(item["intake_key"]))
     to_print.append("")
-    item["endpoint"] = endpoint
 
     if item["protocol"].lower() == "tls":
         config = template_tls.render(item)
     else:
         config = template.render(item)
-    filename = f"/etc/rsyslog.d/{i}_{item['name'].lower()}.conf"
+    filename = f"/etc/rsyslog.d/{i}_{item['name']}.conf"
     # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)

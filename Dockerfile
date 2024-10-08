@@ -20,11 +20,13 @@ ENV REGION=FRA1
 RUN rm -rf /etc/rsyslog.d/50-default.conf
 
 COPY generate_config.py generate_config.py
+COPY rsyslog-imstats /etc/logrotate.d/rsyslog-imstats
 COPY rsyslog.conf rsyslog.conf
 COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml
 COPY template.j2 template.j2
 COPY template_tls.j2 template_tls.j2
+COPY stats_template.j2 stats_template.j2
 
 RUN chmod +x entrypoint.sh
 

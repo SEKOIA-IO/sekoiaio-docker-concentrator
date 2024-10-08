@@ -1,0 +1,16 @@
+template(name="SEKOIAIO_stats_Template" type="string" string="<%pri%>1 %timegenerated:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg%\n")
+ruleset(name="stats"){
+action(
+    name="output-{{ name |lower }}"
+    type="omfwd"
+    protocol="tcp"
+    target="{{ endpoint }}"
+    port="10514"
+    TCP_Framing="octet-counted"
+    StreamDriver="gtls"
+    StreamDriverMode="1"
+    StreamDriverAuthMode="x509/name"
+    StreamDriverPermittedPeers="{{ endpoint }}"
+    Template="SEKOIAIO_stats_Template"
+    )
+}

@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.0]
+
+- Enable forwarder monitoring
+
 ## [2.6.0]
 
 - Add the support of TLS
