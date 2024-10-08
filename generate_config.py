@@ -66,7 +66,6 @@ for item in data.get("intakes", []):
     item["name"] = item["name"].replace(" ", "_").lower()
 
     if item.get("stats") is not None and item.get("stats") is not False:
-        print(item["stats"])
         activate_monitoring(item)
         continue
 
