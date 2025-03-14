@@ -44,6 +44,8 @@ elif region == "mco1":
     endpoint = "mco1.app.sekoia.io"
 elif region == "uae1":
     endpoint = "app.uae1.sekoia.io"
+elif region == "usa1":
+    endpoint = "app.usa1.sekoia.io"
 else:
     endpoint = "intake.sekoia.io"
 
