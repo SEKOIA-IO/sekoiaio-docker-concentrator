@@ -5,6 +5,7 @@ All notable changes with sekoiaio concentrator will be documented in this file.
 ## [2.7.1]
 
 - Support USA1 region
+- Fix TLS template
 
 ## [2.7.0]
 
