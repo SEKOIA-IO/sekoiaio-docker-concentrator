@@ -2,6 +2,11 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.2]
+
+- Reset counters when forwarder monitoring is active
+- Ability to define a custom queue size per intake
+
 ## [2.7.1]
 
 - Support USA1 region

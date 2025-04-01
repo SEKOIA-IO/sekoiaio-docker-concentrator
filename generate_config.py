@@ -18,10 +18,13 @@ def activate_monitoring(item: dict[str, str]) -> None:
     to_print.append("")
     config = template_stats.render(item)
     filename = f"/etc/rsyslog.d/stats_{item['name']}.conf"
-    # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)
 
+# Generate main rsyslog config file
+filename = f"/etc/rsyslog.conf"
+with open(filename, "w") as f:
+        f.write(Environment(loader=FileSystemLoader(".")).get_template("rsyslog.conf").render(env=os.environ))
 
 # Open input config file
 with open("intakes.yaml", "r") as fyaml:
@@ -62,6 +65,7 @@ for item in data.get("intakes", []):
         )
         exit(0)
 
+    item["default_queue_size"] = round(int(os.getenv("MEMORY_MESSAGES", 100000)) / len(data.get("intakes")))
     item["endpoint"] = endpoint
 
     name_origin = item["name"]
@@ -82,7 +86,6 @@ for item in data.get("intakes", []):
     else:
         config = template.render(item)
     filename = f"/etc/rsyslog.d/{i}_{item['name']}.conf"
-    # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)
     i = i + 1
