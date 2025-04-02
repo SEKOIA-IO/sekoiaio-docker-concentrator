@@ -17,6 +17,19 @@ template(name="SEKOIAIO_{{ name |lower }}_Output_Template" type="string" string=
 
 template(name="SEKOIAIO_{{ name |lower }}_Template" type="string" string="<%pri%>1 %timegenerated:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg:R,ERE,1,FIELD:^[ \t]*(.*)$--end%\n")
 ruleset(name="ruleset-{{ name | lower}}" queue.type="LinkedList" queue.filename="sekoia_{{ name |lower }}_queue" queue.size="{{ queue_size if queue_size else default_queue_size }}" queue.saveOnShutdown="on") {
+
+{% if env['RELP_OUTPUT'] %}
+action(
+    name="output-{{ name |lower }}"
+    type="omrelp"
+    target="{{ ('relp.' ~ endpoint) if endpoint.startswith("intake") else endpoint }}"
+    tls="on"
+    port="11514"
+    tls.authmode="name"
+    tls.permittedpeer="{{ ('relp.' ~ endpoint) if endpoint.startswith("intake") else endpoint }}"
+    Template="SEKOIAIO_{{ name |lower }}_Template"
+    )
+{% else %}
 action(
     name="output-{{ name |lower }}"
     type="omfwd"
@@ -30,7 +43,7 @@ action(
     StreamDriverPermittedPeers="{{ endpoint }}"
     Template="SEKOIAIO_{{ name |lower }}_Template"
     )
-
+{% endif %}
 {% if ( debug | lower ) == "true"  %}
 action(
     type="omfile"

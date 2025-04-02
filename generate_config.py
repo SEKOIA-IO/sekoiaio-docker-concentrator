@@ -82,9 +82,9 @@ for item in data.get("intakes", []):
     to_print.append("")
 
     if item["protocol"].lower() == "tls":
-        config = template_tls.render(item)
+        config = template_tls.render(item, env=os.environ)
     else:
-        config = template.render(item)
+        config = template.render(item, env=os.environ)
     filename = f"/etc/rsyslog.d/{i}_{item['name']}.conf"
     with open(filename, "w") as f:
         f.write(config)

@@ -4,8 +4,9 @@ All notable changes with sekoiaio concentrator will be documented in this file.
 
 ## [2.7.2]
 
-- Reset counters when forwarder monitoring is active
-- Ability to define a custom queue size per intake
+- Reset counters for forwarder monitoring events
+- Added the ability to define a custom queue size for an intake.
+- Introduced the capability to send events to Sekoia using the RELP protocol.
 
 ## [2.7.1]
 

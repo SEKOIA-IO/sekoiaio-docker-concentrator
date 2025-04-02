@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y \
     rsyslog \
     rsyslog-gnutls \
+    rsyslog-relp \
     gettext-base \
     python3 \
     python3-yaml \
