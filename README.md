@@ -17,7 +17,7 @@ To be able to run the container you need:
   | 50 000           |    6   |   16      |      5000      |  MEMORY_MESSAGES=12000000 / DISK_SPACE=4980g |
 
 > **Info**: 
->      These data are recommendations based on standards and observed averages on Sekoia.io, so they may change depending on use cases.
+> These data are recommendations based on standards and observed averages on Sekoia.io, so they may change depending on use cases.
 
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
 * INBOUND TCP or UDP flows opened between the systems/applications and the concentrator on the ports of your choice
@@ -80,7 +80,7 @@ intakes:
 
 When debug is set to true, the raw event received and the output message will be printed in STDOUT. Each one will be respectively identified using tags: : [Input $INTAKE_KEY] & [Output $INTAKE_KEY]
 
-# Docker-compose file
+### Docker-compose file
 To ease the deployment, a `docker-compose.yml` file is suggested and a template is given.
 
 #### Environment variables
