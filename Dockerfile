@@ -1,12 +1,17 @@
-FROM ubuntu:22.04
+# Use the latest Alpine Linux base image
+FROM alpine:latest
 
-RUN apt-get update && apt-get install -y \
+# Update the package list and install required packages
+RUN apk update && apk add --no-cache \
     rsyslog \
-    rsyslog-gnutls \
-    gettext-base \
+    rsyslog-tls \
+    rsyslog-http \
+    rsyslog-imrelp \
+    rsyslog-omrelp \
+    gettext \
     python3 \
-    python3-yaml \
-    python3-jinja2 \
+    py3-yaml \
+    py3-jinja2 \
     wget
 
 RUN wget -O /SEKOIA-IO-intake.pem https://app.sekoia.io/assets/files/SEKOIA-IO-intake.pem
