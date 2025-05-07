@@ -18,10 +18,8 @@ def activate_monitoring(item: dict[str, str]) -> None:
     to_print.append("")
     config = template_stats.render(item)
     filename = f"/etc/rsyslog.d/stats_{item['name']}.conf"
-    # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)
-
 
 # Open input config file
 with open("intakes.yaml", "r") as fyaml:
@@ -30,9 +28,8 @@ with open("intakes.yaml", "r") as fyaml:
 # Load jinja template
 template = Environment(loader=FileSystemLoader(".")).get_template("template.j2")
 template_tls = Environment(loader=FileSystemLoader(".")).get_template("template_tls.j2")
-template_stats = Environment(loader=FileSystemLoader(".")).get_template(
-    "stats_template.j2"
-)
+template_stats = Environment(loader=FileSystemLoader(".")).get_template("stats_template.j2")
+template_http = Environment(loader=FileSystemLoader(".")).get_template("template_http.j2")
 
 # Identify the region
 region = os.getenv("REGION")
@@ -62,6 +59,7 @@ for item in data.get("intakes", []):
         )
         exit(0)
 
+    item["default_queue_size"] = round(int(os.getenv("MEMORY_MESSAGES", 100000)) / len(data.get("intakes")))
     item["endpoint"] = endpoint
 
     name_origin = item["name"]
@@ -72,17 +70,23 @@ for item in data.get("intakes", []):
         continue
 
     to_print.append("Intake name: " + str(name_origin))
-    to_print.append("Protocol: " + str(item["protocol"]))
-    to_print.append("Port: " + str(item["port"]))
     to_print.append("Intake key: " + str(item["intake_key"]))
-    to_print.append("")
 
-    if item["protocol"].lower() == "tls":
-        config = template_tls.render(item)
+    if item["protocol"].lower() == "http":
+        if item.get("restpath") is None:
+            item["restpath"] = "plain"
+        if item.get("compress_level") is None:
+            item["compress_level"] = "6"
+        to_print.append("InputProtocol: " + str(item["input_protocol"]) + " Input_Port: " + str(item["port"]) + " Protocol: " + str(item["protocol"]) + " RestPath:" + str(item["restpath"]) + " CompressLevel: " + str(item["compress_level"]))
+        config = template_http.render(item, env=os.environ)
+    elif item["protocol"].lower() == "tls":
+        config = template_tls.render(item, env=os.environ)
+        to_print.append("Protocol: " + str(item["protocol"] + " Port: " + str(item["port"])))
     else:
-        config = template.render(item)
+        config = template.render(item, env=os.environ)
+        to_print.append("Protocol: " + str(item["protocol"] + " Port: " + str(item["port"])))
+    to_print.append("")
     filename = f"/etc/rsyslog.d/{i}_{item['name']}.conf"
-    # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)
     i = i + 1

@@ -1,0 +1,35 @@
+input(type="im{{ input_protocol | lower }}" port="{{ input_port }}" ruleset="ruleset-{{ name | lower}}" name="input-{{ name | lower}}")
+
+{% if debug %}
+template(name="SEKOIAIO_{{ name |lower }}_Input_Template" type="string" string="[Input \"{{ intake_key }}\"] %rawmsg%\n")
+{% endif %}
+# Template for HTTP Payload (JSON Format)
+template(
+    name="SEKOIAIO_{{ name | lower }}_Output_Template"
+    type="string"
+    string="\"timestamp\": \"%timegenerated:::date-rfc3339%\", \"hostname\": \"%hostname%\", \"app_name\": \"%programname%\", \"procid\": \"%procid%\", \"message\": \"%msg%\""
+)
+ruleset(name="ruleset-{{ name | lower}}" queue.type="LinkedList" queue.filename="sekoia_{{ name |lower }}_queue" queue.saveOnShutdown="on"){
+action(
+    name="output-{{ name |lower }}"
+    type="omhttp"
+    server="{{ endpoint }}"
+    serverport="443"
+    restpath="{{ restpath }}"
+    usehttps="on"
+    compress="on"
+    compress.level="{{ compress_level }}"
+    httpheaders=["X-SEKOIAIO-INTAKE-KEY: {{ intake_key }}"]
+    Template="SEKOIAIO_{{ name | lower }}_Output_Template"
+    )
+
+{% if ( debug | lower ) == "true"  %}
+action(
+    type="omfile"
+    file="/dev/stdout"
+    name="debugin-{{ name | lower}}"
+    Template="SEKOIAIO_{{ name |lower }}_Input_Template"
+    )
+{% endif %}
+
+}

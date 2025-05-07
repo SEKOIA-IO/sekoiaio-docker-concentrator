@@ -2,7 +2,7 @@
 # version: "3.9"
 services:
   rsyslog:
-    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.7.1
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:beta-http
     environment:
       - MEMORY_MESSAGES=2000000
       - DISK_SPACE=180g
@@ -13,5 +13,5 @@ services:
     volumes:
       - ./intakes.yaml:/intakes.yaml
       - ./disk_queue:/var/spool/rsyslog
+      - ./extended_conf:/extended_conf
     restart: always
-    pull_policy: always
