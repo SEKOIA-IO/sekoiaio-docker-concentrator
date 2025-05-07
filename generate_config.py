@@ -21,6 +21,18 @@ def activate_monitoring(item: dict[str, str]) -> None:
     with open(filename, "w") as f:
         f.write(config)
 
+# Directory where configs will be saved
+config_dir = "/etc/rsyslog.d/"
+
+# Check if the directory exists; if not, attempt to create it
+try:
+    os.makedirs(config_dir, exist_ok=True)
+except PermissionError:
+    print(f"Permission denied: Cannot create or write to the directory '{config_dir}'.")
+    print("Please run the script with appropriate permissions (e.g., using sudo).")
+except Exception as e:
+    print(f"An unexpected error occurred while accessing '{config_dir}': {e}")
+
 # Generate main rsyslog config file
 filename = f"/etc/rsyslog.conf"
 with open(filename, "w") as f:
