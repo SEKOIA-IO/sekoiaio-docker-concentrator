@@ -21,6 +21,11 @@ def activate_monitoring(item: dict[str, str]) -> None:
     with open(filename, "w") as f:
         f.write(config)
 
+# Generate main rsyslog config file
+filename = f"/etc/rsyslog.conf"
+with open(filename, "w") as f:
+    f.write(Environment(loader=FileSystemLoader(".")).get_template("rsyslog.conf").render(env=os.environ))
+
 # Open input config file
 with open("intakes.yaml", "r") as fyaml:
     data = yaml.safe_load(fyaml)
