@@ -1,4 +1,4 @@
-input(type="im{{ input_protocol | lower }}" port="{{ input_port }}" ruleset="ruleset-{{ name | lower}}" name="input-{{ name | lower}}")
+input(type="im{{ input_protocol | lower }}" port="{{ port }}" ruleset="ruleset-{{ name | lower}}" name="input-{{ name | lower}}")
 
 {% if debug %}
 template(name="SEKOIAIO_{{ name |lower }}_Input_Template" type="string" string="[Input \"{{ intake_key }}\"] %rawmsg%\n")
