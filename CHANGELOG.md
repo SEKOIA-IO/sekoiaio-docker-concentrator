@@ -2,6 +2,11 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [beta-http]
+
+- New alpine based image
+- Support for HTTP output
+
 ## [2.7.1]
 
 - Support USA1 region

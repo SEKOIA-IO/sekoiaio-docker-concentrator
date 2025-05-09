@@ -1,12 +1,17 @@
-FROM ubuntu:22.04
+# Use the latest Alpine Linux base image
+FROM alpine:3.21
 
-RUN apt-get update && apt-get install -y \
+# Update the package list and install required packages
+RUN apk update && apk add --no-cache \
     rsyslog \
-    rsyslog-gnutls \
-    gettext-base \
+    rsyslog-tls \
+    rsyslog-http \
+    rsyslog-imrelp \
+    rsyslog-omrelp \
+    gettext \
     python3 \
-    python3-yaml \
-    python3-jinja2 \
+    py3-yaml \
+    py3-jinja2 \
     wget
 
 RUN wget -O /SEKOIA-IO-intake.pem https://app.sekoia.io/assets/files/SEKOIA-IO-intake.pem
@@ -26,6 +31,7 @@ COPY entrypoint.sh entrypoint.sh
 COPY intakes.yaml intakes.yaml
 COPY template.j2 template.j2
 COPY template_tls.j2 template_tls.j2
+COPY template_http.j2 template_http.j2
 COPY stats_template.j2 stats_template.j2
 
 RUN chmod +x entrypoint.sh
