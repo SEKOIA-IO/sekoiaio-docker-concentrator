@@ -1,5 +1,5 @@
 template(name="SEKOIAIO_stats_Template" type="string" string="<%pri%>1 %timegenerated:::date-rfc3339% %hostname% %app-name% %procid% LOG [SEKOIA@53288 intake_key=\"{{ intake_key }}\"] %msg%\n")
-ruleset(name="stats"){
+ruleset(name="stats" queue.type="LinkedList" queue.filename="sekoia_{{ name |lower }}_queue" queue.size="{{ queue_size if queue_size else default_queue_size }}" queue.saveOnShutdown="on"){
 action(
     name="output-{{ name |lower }}"
     type="omfwd"

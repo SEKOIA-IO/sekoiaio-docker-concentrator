@@ -15,13 +15,17 @@ def is_intake_key(intake_key: str) -> re.Match[str] | None:
 def activate_monitoring(item: dict[str, str]) -> None:
     to_print.append("Forwarder monitoring is active")
     to_print.append("Intake key: " + str(item["intake_key"]))
+    to_print.append("Queue size: " + str(item["queue_size"]) if "queue_size" in item else "Queue size: " + str(item["default_queue_size"]))
     to_print.append("")
     config = template_stats.render(item)
     filename = f"/etc/rsyslog.d/stats_{item['name']}.conf"
-    # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)
 
+# Generate main rsyslog config file
+filename = f"/etc/rsyslog.conf"
+with open(filename, "w") as f:
+        f.write(Environment(loader=FileSystemLoader(".")).get_template("rsyslog.conf").render(env=os.environ))
 
 # Open input config file
 with open("intakes.yaml", "r") as fyaml:
@@ -62,6 +66,7 @@ for item in data.get("intakes", []):
         )
         exit(0)
 
+    item["default_queue_size"] = round(int(os.getenv("MEMORY_MESSAGES", 100000)) / len(data.get("intakes")))
     item["endpoint"] = endpoint
 
     name_origin = item["name"]
@@ -75,14 +80,14 @@ for item in data.get("intakes", []):
     to_print.append("Protocol: " + str(item["protocol"]))
     to_print.append("Port: " + str(item["port"]))
     to_print.append("Intake key: " + str(item["intake_key"]))
+    to_print.append("Queue size: " + str(item["queue_size"]) if "queue_size" in item else "Queue size: " + str(item["default_queue_size"]))
     to_print.append("")
 
     if item["protocol"].lower() == "tls":
-        config = template_tls.render(item)
+        config = template_tls.render(item, env=os.environ)
     else:
-        config = template.render(item)
+        config = template.render(item, env=os.environ)
     filename = f"/etc/rsyslog.d/{i}_{item['name']}.conf"
-    # Écrire le contenu généré dans le fichier
     with open(filename, "w") as f:
         f.write(config)
     i = i + 1

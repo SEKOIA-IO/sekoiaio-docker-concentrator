@@ -16,8 +16,8 @@ To be able to run the container you need:
   | 10 000           |    4   |   8       |      1000      |  MEMORY_MESSAGES=5000000 / DISK_SPACE=980g  |
   | 50 000           |    6   |   16      |      5000      |  MEMORY_MESSAGES=12000000 / DISK_SPACE=4980g |
 
-  !!! info 
-      These data are recommendations based on standards and observed averages on Sekoia.io, so they may change depending on use cases.
+> **Info**: 
+> These data are recommendations based on standards and observed averages on Sekoia.io, so they may change depending on use cases.
 
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
 * INBOUND TCP or UDP flows opened between the systems/applications and the concentrator on the ports of your choice
@@ -92,11 +92,22 @@ environment:
     - DISK_SPACE=180g
     - REGION=FRA1
 ```
-* `MEMORY_MESSAGES=2000000` means the queue is allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB).
-* `DISK_SPACE=180g` means the queue is allowed to store on disk up to 180 giga of messages.
+* `MEMORY_MESSAGES=2000000` means queues are allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB). Note that this value is distributed among the configured intakes. For example, if 10 intakes are configured, each queue will have a retention capacity of 200,000 messages.
+* `DISK_SPACE=180g` means that the total of all queues is allowed to store up to 180 gigabytes of messages on disk.
 * `REGION=FRA1` is the region where to send the logs. Currently 4 options are available: `FRA1`, `FRA2`, `MCO1`, `USA1` and `UAE1`
 
 [Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
+
+> **Info**: 
+>  In case you want to set a specific retention size in memory for a particular intake, you can define it using this type of configuration:
+>  ```yaml
+>  - name: Techno1
+>    protocol: tcp
+>    port: 20516
+>    intake_key: INTAKE_KEY_FOR_TECHNO_1
+>    queue_size: 100000
+>  ```
+>  Note that other intakes will retain their default values, which is MEMORY_MESSAGES divided by the total number of intakes.
 
 #### Ports
 Ports in Docker are used to perform port forwarding between the host running the container and the container itself.
