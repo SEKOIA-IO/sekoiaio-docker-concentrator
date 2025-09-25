@@ -50,6 +50,8 @@ elif region == "uae1":
     endpoint = "app.uae1.sekoia.io"
 elif region == "usa1":
     endpoint = "app.usa1.sekoia.io"
+elif region == "other":
+    endpoint = os.getenv("ENDPOINT")
 else:
     endpoint = "intake.sekoia.io"
 
