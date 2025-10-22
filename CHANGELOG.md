@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.3]
+
+- Customize destination endpoint
+
 ## [2.7.2]
 
 - Reset counters for forwarder monitoring events
