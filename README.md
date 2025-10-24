@@ -7,26 +7,27 @@ To catch incoming events and apply the right intake key, this image processes ea
 The build is based on Ubuntu 22.04 and will install all the required components.
 
 ## Prerequisites
+
 To be able to run the container you need:
 
-* A x86-64 Linux host using one of these templates:
-  | Number of assets |  vCPUs |  RAM (Go) | Disk size (Go) | Sekoia concentrator settings                |
-  |------------------|:------:|:---------:|:--------------:|:-------------------------------------------:|
-  | 1000             |    2   |   4       |      200       |  MEMORY_MESSAGES=2000000 / DISK_SPACE=180g  |
-  | 10 000           |    4   |   8       |      1000      |  MEMORY_MESSAGES=5000000 / DISK_SPACE=980g  |
-  | 50 000           |    6   |   16      |      5000      |  MEMORY_MESSAGES=12000000 / DISK_SPACE=4980g |
+* A `x86-64` Linux host using one of these templates:
+  | Number of assets |  vCPUs |  RAM (Go) | Disk size (Go) | Sekoia concentrator settings                   |
+  |------------------|:------:|:---------:|:--------------:|:----------------------------------------------:|
+  | `1000`           |   `2`  |   `4`     |     `200`      |  `MEMORY_MESSAGES=2000000 / DISK_SPACE=180g`   |
+  | `10 000`         |   `4`  |   `8`     |     `1000`     |  `MEMORY_MESSAGES=5000000 / DISK_SPACE=980g`   |
+  | `50 000`         |   `6`  |   `16`    |     `5000`     |  `MEMORY_MESSAGES=12000000 / DISK_SPACE=4980g` |
 
-> **Info**: 
+> [!NOTE]
 > These data are recommendations based on standards and observed averages on Sekoia.io, so they may change depending on use cases.
 
 * Last version of Docker Engine. You will find all the installation process on the [official website](https://docs.docker.com/engine/install/)
 * INBOUND TCP or UDP flows opened between the systems/applications and the concentrator on the ports of your choice
 * OUTBOUND TCP flow opened towards:
-  * **FRA1** intake.sekoia.io on port 10514 
-  * **FRA2** fra2.app.sekoia.io on port 10514 
-  * **MCO1** mco1.app.sekoia.io on port 10514 
-  * **EUA1** app.uae1.sekoia.io on port 10514 
-  * **USA1** app.usa1.sekoia.io on port 10514 
+  * **`FRA1`** intake.sekoia.io on port 10514 
+  * **`FRA2`** intake.fra2.sekoia.io on port 10514 
+  * **`MCO1`** app.mco1.sekoia.io on port 10514 
+  * **`EUA1`** app.uae1.sekoia.io on port 10514 
+  * **`USA1`** app.usa1.sekoia.io on port 10514 
   
 
 ## Docker-compose folder
@@ -60,6 +61,7 @@ intakes:
 
 #### Debug 
 A debug variable is available in order to debug a specific intake, for example 
+
 ```yaml
 ---
 intakes:
@@ -195,38 +197,38 @@ volumes:
 
 We will now create the key and certificate that will be used for encryption. In this case, we will create a self-signed certificate, meaning that the server certificate and the CA (Certificate Authority) certificate will be the same. If you have expertise in managing certificates, you can create a certificate signed by a real CA.
 
-**Step one**: Create the directory and navigate to it:
+1. Create the directory and navigate to it:
 
-```
+```sh
 mkdir certs && cd certs
 ```
 
-**Step two**: Install OpenSSL
+2. Install OpenSSL
 
-=== "Debian, Ubuntu"
+#### Debian + Ubuntu
 
-    ```bash
-    sudo apt update
-    sudo apt install -y openssl
-    ```
-
-=== "Fedora, Red Hat, CentOS (yum)"
-
-    ```bash
-    sudo yum update
-    sudo yum install -y openssl
-    ```
-
-=== "Fedora, Red Hat, CentOS (dnf)"
-    
-    ```bash
-    sudo dnf update
-    sudo dnf install -y openssl
-    ```
-
-Step three: Create the key and certificate
-
+```bash
+sudo apt update
+sudo apt install -y openssl
 ```
+
+#### Fedora + Red Hat + CentOS (yum)
+
+```bash
+sudo yum update
+sudo yum install -y openssl
+```
+
+#### Fedora + Red Hat + CentOS (dnf)
+    
+```bash
+sudo dnf update
+sudo dnf install -y openssl
+```
+
+3. Create the key and certificate
+
+```sh
 openssl req -x509 \
             -sha256 -days 1825 \
             -nodes \
@@ -243,9 +245,9 @@ openssl req -x509 \
 - `-keyout server.key`: Specifies the file where the generated private key should be saved. In this case, it will be saved to `server.key`.
 - `-out server.crt`: Specifies the file where the generated self-signed certificate should be saved. In this case, it will be saved to `server.crt`.
 
-**Step four**: Change permissions on the files
+4. Change permissions on the files
 
-```
+```sh
 chmod 600 server.key server.crt
 ```
 
@@ -288,4 +290,5 @@ To build the image:
 docker build . -t sekoiaio-docker-concentrator:latest
 ```
 
-**Note**: Be sure to adapt the `docker-compose.yml` accordingly and change `image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:x` by `image: sekoiaio-docker-concentrator:latest` if you use this method.
+> [!IMPORTANT]
+> Be sure to adapt the `docker-compose.yml` accordingly and change `image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:x` by `image: sekoiaio-docker-concentrator:latest` if you use this method

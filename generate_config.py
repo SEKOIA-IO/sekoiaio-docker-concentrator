@@ -43,9 +43,9 @@ region = os.getenv("REGION")
 if region:
     region = region.lower()
 if region == "fra2":
-    endpoint = "fra2.app.sekoia.io"
+    endpoint = "intake.fra2.sekoia.io"
 elif region == "mco1":
-    endpoint = "mco1.app.sekoia.io"
+    endpoint = "app.mco1.sekoia.io"
 elif region == "uae1":
     endpoint = "app.uae1.sekoia.io"
 elif region == "usa1":
