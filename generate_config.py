@@ -23,7 +23,7 @@ def activate_monitoring(item: dict[str, str]) -> None:
         f.write(config)
 
 # Generate main rsyslog config file
-filename = f"/etc/rsyslog.conf"
+filename = "/etc/rsyslog.conf"
 with open(filename, "w") as f:
         f.write(Environment(loader=FileSystemLoader(".")).get_template("rsyslog.conf").render(env=os.environ))
 
@@ -42,14 +42,9 @@ template_stats = Environment(loader=FileSystemLoader(".")).get_template(
 region = os.getenv("REGION")
 if region:
     region = region.lower()
-if region == "fra2":
-    endpoint = "intake.fra2.sekoia.io"
-elif region == "mco1":
-    endpoint = "app.mco1.sekoia.io"
-elif region == "uae1":
-    endpoint = "app.uae1.sekoia.io"
-elif region == "usa1":
-    endpoint = "app.usa1.sekoia.io"
+
+if region in ["fra2", "mco1", "uae1", "usa1"]:
+    endpoint = f"intake.{region}.sekoia.io"
 elif region == "other":
     endpoint = os.getenv("ENDPOINT")
 else:
