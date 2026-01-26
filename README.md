@@ -25,9 +25,9 @@ To be able to run the container you need:
 * OUTBOUND TCP flow opened towards:
   * **`FRA1`** intake.sekoia.io on port 10514 
   * **`FRA2`** intake.fra2.sekoia.io on port 10514 
-  * **`MCO1`** app.mco1.sekoia.io on port 10514 
-  * **`EUA1`** app.uae1.sekoia.io on port 10514 
-  * **`USA1`** app.usa1.sekoia.io on port 10514 
+  * **`MCO1`** intake.mco1.sekoia.io on port 10514 
+  * **`EUA1`** intake.uae1.sekoia.io on port 10514 
+  * **`USA1`** intake.usa1.sekoia.io on port 10514 
   
 
 ## Docker-compose folder
