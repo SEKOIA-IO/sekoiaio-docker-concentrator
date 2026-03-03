@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.4]
+
+- Update default regional intake endpoint
+
 ## [2.7.3]
 
 - Customize destination endpoint
