@@ -8,8 +8,13 @@ on:
   schedule:
     - cron: "0 7 * * 1"
 
+permissions: {}
+
 jobs:
   build:
+    permissions:
+      contents: read  # for docker/build-push-action to access repository contents
+      packages: write  # for docker/login-action to push images to GHCR
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
