@@ -1,4 +1,7 @@
-FROM ubuntu:22.04
+# syntax=docker/dockerfile:1.4
+FROM --platform=${TARGETPLATFORM:-linux/amd64}  ubuntu:22.04
+
+ARG TARGETPLATFORM
 
 RUN apt-get update && apt-get install -y \
     rsyslog \
