@@ -2,6 +2,13 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.6]
+
+- Preserve the original message payload when forwarding events to Sekoia:
+  - Replace `%msg%` with `%rawmsg-after-pri%` in `template.j2` and `template_tls.j2`
+  - Fixes loss of the `CEF:0` banner (and other content stripped by rsyslog's RFC 3164 parser when a leading token ends with `:`, e.g. Forcepoint NGFW, ArcSight CEF sources)
+  - The outbound payload now contains the exact bytes received from the source after the syslog `<PRI>`, instead of rsyslog's reparsed `%msg%`
+
 ## [2.7.5]
 
 - Add `action.resumeRetryCount=-1` and `action.resumeInterval=30` to all output actions:
