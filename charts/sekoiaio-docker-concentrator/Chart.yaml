@@ -1,0 +1,6 @@
+apiVersion: v2
+name: sekoiaio-docker-concentrator
+description: Run a Rsyslog as a concentrator to forward events to Sekoia.io.
+type: application
+version: 0.1.0
+appVersion: "2.7.3"

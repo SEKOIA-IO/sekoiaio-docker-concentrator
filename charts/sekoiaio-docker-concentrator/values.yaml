@@ -1,0 +1,107 @@
+image:
+  repository: ghcr.io/sekoia-io/sekoiaio-docker-concentrator
+  # This sets the pull policy for images.
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+intakes: []
+  # - name: Techno1
+  #   protocol: tcp       # tcp | udp | tls
+  #   port: 20516
+  #   intake_key: INTAKE_KEY_FOR_TECHNO_1
+  #   entrypoint: techno1 # optional, used with ingressRoute.enabled (defaults to intake name)
+
+# disk_space is used as DISK_SPACE env var only when persistence is disabled (emptyDir).
+# When persistence is enabled, DISK_SPACE is inferred from persistence.size.
+disk_space: "32g"
+memory_messages: 100000
+region: "FRA1"
+endpoint: ""       # custom intake endpoint, required when region is "other"
+relp_output: false # use RELP protocol instead of TCP for output
+
+persistence:
+  enabled: false
+  # storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 32Gi
+  annotations: {}
+
+# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created.
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account.
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+# This is for setting Kubernetes Annotations to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer  # LoadBalancer | NodePort | ClusterIP
+  annotations: {}
+
+# When enabled, creates one IngressRouteTCP (tcp/tls) or IngressRouteUDP (udp) per intake.
+# Requires Traefik CRD: traefik.io/v1alpha1 or traefik.containo.us/v1alpha1.
+# Set service.type: ClusterIP to disable direct port exposure alongside Traefik routing.
+# Each intake's Traefik entrypoint defaults to its name; override with the intake's entrypoint field.
+ingressRoute:
+  enabled: false
+
+replicaCount: 1
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  exec:
+    command: ["pgrep", "-x", "rsyslogd"]
+  initialDelaySeconds: 10
+  periodSeconds: 30
+
+readinessProbe:
+  exec:
+    command: ["pgrep", "-x", "rsyslogd"]
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+

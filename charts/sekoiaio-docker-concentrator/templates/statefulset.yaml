@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "sekoiaio-docker-concentrator.fullname" . }}
+  labels:
+    {{- include "sekoiaio-docker-concentrator.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "sekoiaio-docker-concentrator.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "sekoiaio-docker-concentrator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sekoiaio-docker-concentrator.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sekoiaio-docker-concentrator.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DISK_SPACE
+              {{- if .Values.persistence.enabled }}
+              value: {{ .Values.persistence.size | replace "Gi" "g" | quote }}
+              {{- else }}
+              value: {{ .Values.disk_space | quote }}
+              {{- end }}
+            - name: MEMORY_MESSAGES
+              value: {{ .Values.memory_messages | quote }}
+            - name: REGION
+              value: {{ .Values.region | quote }}
+            {{- if .Values.endpoint }}
+            - name: ENDPOINT
+              value: {{ .Values.endpoint | quote }}
+            {{- end }}
+            {{- if .Values.relp_output }}
+            - name: RELP_OUTPUT
+              value: "true"
+            {{- end }}
+          ports:
+            {{- range .Values.intakes }}
+            {{- if not .stats }}
+            - name: {{ .name | lower | replace " " "-" }}
+              containerPort: {{ .port }}
+              protocol: {{ if eq (.protocol | lower) "tls" }}TCP{{ else }}{{ .protocol | upper }}{{ end }}
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            - name: disk-queue
+              mountPath: /var/spool/rsyslog
+            - name: intakes-config
+              mountPath: /intakes.yaml
+              subPath: intakes.yaml
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: intakes-config
+          configMap:
+            name: {{ include "sekoiaio-docker-concentrator.fullname" . }}-intakes
+        {{- if not .Values.persistence.enabled }}
+        - name: disk-queue
+          emptyDir: {}
+        {{- end }}
+{{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: disk-queue
+        {{- with .Values.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- toYaml .Values.persistence.accessModes | nindent 10 }}
+        {{- with .Values.persistence.storageClass }}
+        storageClassName: {{ . }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+{{- end }}

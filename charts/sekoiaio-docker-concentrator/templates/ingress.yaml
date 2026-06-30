@@ -1,0 +1,50 @@
+{{- if .Values.ingressRoute.enabled }}
+{{- $traefikV3 := .Capabilities.APIVersions.Has "traefik.io/v1alpha1" }}
+{{- $traefikV2 := .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1" }}
+{{- if not (or $traefikV3 $traefikV2) }}
+  {{- fail "ingressRoute.enabled is true but the Traefik CRD is not available (traefik.io/v1alpha1 or traefik.containo.us/v1alpha1). Install Traefik or pass --api-versions to helm template." }}
+{{- end }}
+{{- $apiVersion := "traefik.io/v1alpha1" }}
+{{- if not $traefikV3 }}
+{{- $apiVersion = "traefik.containo.us/v1alpha1" }}
+{{- end }}
+{{- $fullName := include "sekoiaio-docker-concentrator.fullname" . }}
+{{- range .Values.intakes }}
+{{- if not .stats }}
+{{- $name := .name | lower | replace " " "-" }}
+{{- $entrypoint := .entrypoint | default $name }}
+{{- if ne (.protocol | lower) "udp" }}
+---
+apiVersion: {{ $apiVersion }}
+kind: IngressRouteTCP
+metadata:
+  name: {{ $fullName }}-{{ $name }}
+  labels:
+    {{- include "sekoiaio-docker-concentrator.labels" $ | nindent 4 }}
+spec:
+  entryPoints:
+    - {{ $entrypoint }}
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: {{ $fullName }}
+          port: {{ .port }}
+{{- else }}
+---
+apiVersion: {{ $apiVersion }}
+kind: IngressRouteUDP
+metadata:
+  name: {{ $fullName }}-{{ $name }}
+  labels:
+    {{- include "sekoiaio-docker-concentrator.labels" $ | nindent 4 }}
+spec:
+  entryPoints:
+    - {{ $entrypoint }}
+  routes:
+    - services:
+        - name: {{ $fullName }}
+          port: {{ .port }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
