@@ -2,6 +2,10 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.6]
+
+- Support SGP1 region
+
 ## [2.7.5]
 
 - Add `action.resumeRetryCount=-1` and `action.resumeInterval=30` to all output actions:
