@@ -94,8 +94,8 @@ environment:
     - DISK_SPACE=180g
     - REGION=FRA1
 ```
-* `MEMORY_MESSAGES=2000000` means queues are allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB). Note that this value is distributed among the configured intakes. For example, if 10 intakes are configured, each queue will have a retention capacity of 200,000 messages.
-* `DISK_SPACE=180g` means that the total of all queues is allowed to store up to 180 gigabytes of messages on disk.
+* `MEMORY_MESSAGES=2000000` means each intake queue is allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then a single queue can use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB). Note that this value applies to **each** configured intake: with 10 intakes, the worst case is 10 queues filled at the same time.
+* `DISK_SPACE=180g` means each intake queue is allowed to store up to 180 gigabytes of messages on disk. As for the memory, this limit applies to **each** configured intake, so the total disk usage can reach the number of intakes multiplied by `DISK_SPACE`.
 * `REGION=FRA1` is the region where to send the logs. Currently many options are available: `FRA1`, `FRA2`, `MCO1`, `USA1`, `UAE1` or `OTHER` combined with the `ENDPOINT` variable to define a custom destination
 
 [Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
@@ -109,7 +109,7 @@ environment:
 >    intake_key: INTAKE_KEY_FOR_TECHNO_1
 >    queue_size: 100000
 >  ```
->  Note that other intakes will retain their default values, which is MEMORY_MESSAGES divided by the total number of intakes.
+>  Note that other intakes will retain their default value, which is MEMORY_MESSAGES.
 
 #### Ports
 Ports in Docker are used to perform port forwarding between the host running the container and the container itself.

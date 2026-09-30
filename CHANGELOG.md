@@ -2,6 +2,15 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.7.6]
+
+- Enforce `DISK_SPACE` on every intake queue (`queue.maxDiskSpace`):
+  - Fixes per-intake queues growing on disk without any limit
+- Each intake queue now uses the full `MEMORY_MESSAGES` value as its default size instead of `MEMORY_MESSAGES` divided by the number of intakes:
+  - A busy intake no longer spills to disk early because of a small share of memory
+  - `MEMORY_MESSAGES` and `DISK_SPACE` now apply to each intake: size the RAM and disk of the host accordingly
+- Apply the same queue settings to the forwarder monitoring queue and the main queue
+
 ## [2.7.5]
 
 - Add `action.resumeRetryCount=-1` and `action.resumeInterval=30` to all output actions:
