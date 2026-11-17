@@ -1,0 +1,35 @@
+{{- if eq .Values.service.type "NodePort" }}
+  {{- range .Values.intakes }}
+  {{- if not .stats }}
+    {{- if or (lt (int .port) 30000) (gt (int .port) 32767) }}
+      {{- fail (printf "Intake %q: port %d is outside the NodePort range (30000-32767). Use ports in that range or switch to LoadBalancer." .name (int .port)) }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sekoiaio-docker-concentrator.fullname" . }}
+  labels:
+    {{- include "sekoiaio-docker-concentrator.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    {{- range .Values.intakes }}
+    {{- if not .stats }}
+    - name: {{ .name | lower | replace " " "-" }}
+      port: {{ .port }}
+      targetPort: {{ .port }}
+      protocol: {{ if eq (.protocol | lower) "tls" }}TCP{{ else }}{{ .protocol | upper }}{{ end }}
+      {{- if eq $.Values.service.type "NodePort" }}
+      nodePort: {{ .port }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+  selector:
+    {{- include "sekoiaio-docker-concentrator.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sekoiaio-docker-concentrator.fullname" . }}-intakes
+  labels:
+    {{- include "sekoiaio-docker-concentrator.labels" . | nindent 4 }}
+data:
+  intakes.yaml: |
+{{ toYaml (dict "intakes" .Values.intakes) | indent 4 }}
