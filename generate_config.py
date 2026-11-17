@@ -43,7 +43,7 @@ region = os.getenv("REGION")
 if region:
     region = region.lower()
 
-if region in ["fra2", "mco1", "uae1", "usa1"]:
+if region in ["fra2", "mco1", "uae1", "usa1", "sgp1"]:
     endpoint = f"intake.{region}.sekoia.io"
 elif region == "other":
     endpoint = os.getenv("ENDPOINT")
