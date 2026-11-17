@@ -2,11 +2,14 @@
 # version: "3.9"
 services:
   rsyslog:
-    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.7.3
+    image: ghcr.io/sekoia-io/sekoiaio-docker-concentrator:2.7.7
+    # Name of the host machine, used as hostname for forwarder monitoring events
+    hostname: my-forwarder-host
     environment:
       - MEMORY_MESSAGES=2000000
       - DISK_SPACE=180g
       - REGION=FRA1
+      - FORWARDER_HOSTNAME=my-forwarder-host
     ports:
       - "20516-20566:20516-20566"
       - "20516-20566:20516-20566/udp"
