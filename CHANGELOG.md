@@ -2,6 +2,12 @@
 
 All notable changes with sekoiaio concentrator will be documented in this file.
 
+## [2.8.0]
+
+- Move the base image from Ubuntu 22.04 to Ubuntu 24.04, upgrading rsyslog from 8.2112.0 to 8.2312.0:
+  - Includes the upstream fix for an infinite loop in the GnuTLS receive path ([rsyslog#4823](https://github.com/rsyslog/rsyslog/pull/4823), released in 8.2204.0), which can leave a TLS input thread looping at 100% CPU. This matches reports of TLS intakes that stop forwarding until the container is restarted
+  - Ubuntu 22.04's rsyslog package does not include this fix
+
 ## [2.7.6]
 
 - Support SGP1 region

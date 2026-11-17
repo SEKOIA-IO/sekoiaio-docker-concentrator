@@ -4,7 +4,7 @@ The files in this repository are used to build and create a Docker container run
 
 To catch incoming events and apply the right intake key, this image processes each source on a specific TCP port.
 
-The build is based on Ubuntu 22.04 and will install all the required components.
+The build is based on Ubuntu 24.04 and will install all the required components.
 
 ## Prerequisites
 
