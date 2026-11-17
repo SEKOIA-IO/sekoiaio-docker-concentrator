@@ -22,6 +22,16 @@ def activate_monitoring(item: dict[str, str]) -> None:
     with open(filename, "w") as f:
         f.write(config)
 
+def is_valid_hostname(hostname: str) -> bool:
+    pattern = r"^[a-zA-Z0-9]([a-zA-Z0-9.-]{0,253}[a-zA-Z0-9])?$"
+    return re.fullmatch(pattern, hostname) is not None
+
+
+forwarder_hostname = os.getenv("FORWARDER_HOSTNAME")
+if forwarder_hostname and not is_valid_hostname(forwarder_hostname):
+    print(f"ERROR: FORWARDER_HOSTNAME '{forwarder_hostname}' is not a valid hostname. Exiting...")
+    exit(1)
+
 # Generate main rsyslog config file
 filename = "/etc/rsyslog.conf"
 with open(filename, "w") as f:

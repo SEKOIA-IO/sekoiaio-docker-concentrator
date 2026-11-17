@@ -94,10 +94,12 @@ environment:
     - MEMORY_MESSAGES=2000000
     - DISK_SPACE=180g
     - REGION=FRA1
+    - FORWARDER_HOSTNAME=my-forwarder-host
 ```
 * `MEMORY_MESSAGES=2000000` means queues are allowed to store up to 2,000,000 messages in memory. If we consider a message size is 1.2KB, then you will use 2,4GB of RAM memory (2000000 * 1.2KB = 2.4GB). Note that this value is distributed among the configured intakes. For example, if 10 intakes are configured, each queue will have a retention capacity of 200,000 messages.
 * `DISK_SPACE=180g` means that the total of all queues is allowed to store up to 180 gigabytes of messages on disk.
 * `REGION=FRA1` is the region where to send the logs. Currently many options are available: `FRA1`, `FRA2`, `MCO1`, `USA1`, `UAE1`, `SGP1` or `OTHER` combined with the `ENDPOINT` variable to define a custom destination
+* `FORWARDER_HOSTNAME=my-forwarder-host` (optional) is the hostname reported in the forwarder monitoring events (`log.hostname`). Without it, rsyslog uses the container hostname, which Docker sets to a random container ID by default. Set it to the name of the machine running the forwarder. Alternatively, set `hostname: my-forwarder-host` on the service in `docker-compose.yml`. Logs relayed from your assets keep their own hostname either way.
 
 [Here](#prerequisites) you will find recommendations to set these variables based on the number of assets. You can also define your own values, which should be chosen according to your virtual machine's template.
 
